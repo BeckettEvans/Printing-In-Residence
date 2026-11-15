@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printing in Residence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* Printing in Residence — site styles
+   Follows the team charter's design standards:
+   one typeface, one heading hierarchy, bold for emphasis, one primary colour
+   plus one accent, readable in black and white, captions on every visual.
+   Links keep an underline so they can be found without colour. */
+
+/* ---------- Typeface (IBM Plex Sans, SIL Open Font License) ---------- */
+
+
+
+/* ---------- Tokens ---------- */
+:root {
+  color-scheme: light dark;
+
+  /* Primary colour: graphite. Accent: green. */
+  --paper: #f3f3ef;
+  --surface: #fbfbf8;
+  --ink: #1b1f23;
+  --ink-soft: #4a5157;
+  --rule: #c7cac4;
+  --rule-strong: #7d848a;
+  --accent: #14633c;
+  --accent-tint: #dcebe1;
+
+  --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --measure: 68ch;
+  --radius: 4px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --sidebar: 17rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #15181b;
+    --surface: #1d2125;
+    --ink: #ecebe6;
+    --ink-soft: #a9b0b4;
+    --rule: #353b40;
+    --rule-strong: #7b838a;
+    --accent: #79d19e;
+    --accent-tint: #1f3329;
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--space-5);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.45rem + 2.75vw, 3rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-4);
+}
+
+h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+  margin: var(--space-7) 0 var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: 1.1875rem;
+  margin: var(--space-6) 0 var(--space-2);
+}
+
+p,
+ul,
+ol,
+dl,
+table,
+figure,
+blockquote,
+pre {
+  margin: 0 0 var(--space-4);
+}
+
+p,
+li,
+dd,
+figcaption {
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+ul,
+ol {
+  padding-left: 1.4em;
+}
+
+li + li {
+  margin-top: var(--space-2);
+}
+
+strong,
+b {
+  font-weight: 600;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+code,
+kbd {
+  font-family: var(--font);
+  font-size: 0.95em;
+  letter-spacing: 0.02em;
+  padding: 0.05em 0.35em;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -4rem;
+  z-index: 10;
+  padding: var(--space-2) var(--space-4);
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius);
+}
+
+.skip-link:focus {
+  top: var(--space-3);
+}
+
+/* ---------- Page frame ---------- */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.site-title {
+  font-weight: 600;
+  font-size: 1.0625rem;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.site-title:hover {
+  text-decoration: underline;
+}
+
+.menu-button {
+  font: inherit;
+  font-weight: 600;
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.menu-button[aria-expanded="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.site-nav {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+/* With JavaScript, the menu stays closed on small screens until opened. */
+.js .site-nav:not([data-open]) {
+  display: none;
+}
+
+.nav-heading {
+  margin: 0 0 var(--space-2);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.nav-steps,
+.nav-reference {
+  list-style: none;
+  margin: 0 0 var(--space-5);
+  padding: 0;
+}
+
+.nav-reference {
+  margin-bottom: 0;
+}
+
+.nav-steps > li,
+.nav-reference > li {
+  margin: 0;
+}
+
+.nav-steps {
+  counter-reset: step;
+}
+
+.nav-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.nav-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: grid;
+  place-items: center;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
+}
+
+.nav-steps > li.is-current::before {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.site-nav a,
+.nav-step-name {
+  display: block;
+  padding: var(--space-2) var(--space-2);
+  min-height: 2.5rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: var(--radius);
+}
+
+.site-nav a:hover {
+  text-decoration: underline;
+}
+
+.site-nav a[aria-current="page"] {
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--ink);
+  background: var(--paper);
+}
+
+.nav-buildings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-buildings > li {
+  margin: 0;
+}
+
+.layout-main {
+  padding: var(--space-5) var(--space-4) var(--space-7);
+  min-width: 0;
+}
+
+.content {
+  max-width: 46rem;
+}
+
+@media (min-width: 62rem) {
+  .menu-button {
+    display: none;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .site-nav,
+  .js .site-nav:not([data-open]) {
+    display: block;
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    padding: var(--space-6) var(--space-4) var(--space-6) var(--space-5);
+    border-bottom: 0;
+    background: transparent;
+  }
+
+  .site-header {
+    padding-inline: var(--space-5);
+  }
+
+  .layout-main {
+    padding: var(--space-6) var(--space-7) var(--space-8);
+    border-left: 1px solid var(--rule);
+    min-height: calc(100vh - 3.5rem);
+  }
+}
+
+/* ---------- Decorative header (AI generated, decorative only) ---------- */
+.layers {
+  margin: 0 0 var(--space-5);
+}
+
+.layers svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.layers figcaption {
+  margin-top: var(--space-1);
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  text-align: right;
+  max-width: none;
+}
+
+.layers .grid-line {
+  stroke: var(--rule);
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.layers .layer {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.layers .layer-done {
+  stroke: var(--ink);
+}
+
+.layers .layer-now {
+  stroke: var(--accent);
+}
+
+.layers .layer-ghost {
+  stroke: var(--rule-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 7;
+  opacity: 0.8;
+}
+
+.layers .nozzle {
+  fill: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .layers .layer-done,
+  .layers .layer-now {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: lay 520ms cubic-bezier(0.3, 0, 0.2, 1) forwards;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+
+  .layers .layer-now {
+    animation-duration: 900ms;
+  }
+
+  .layers .nozzle {
+    opacity: 0;
+    animation: arrive 200ms ease-out forwards;
+    animation-delay: calc(var(--i) * 70ms + 820ms);
+  }
+
+  @keyframes lay {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes arrive {
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* ---------- Page heading block ---------- */
+.step-label {
+  margin: 0 0 var(--space-2);
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.draft-note {
+  display: inline-block;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.9375rem;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+}
+
+.toc {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.toc-title {
+  margin: 0 0 var(--space-2);
+  font-weight: 600;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.4em;
+}
+
+.toc li + li {
+  margin-top: var(--space-1);
+}
+
+.toc a {
+  color: var(--ink);
+}
+
+/* ---------- Content components ---------- */
+
+/* Empty section marker. Delete the paragraph once the section is written. */
+.placeholder {
+  padding: var(--space-3) var(--space-4);
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+}
+
+/* Numbered procedure. */
+.steps {
+  list-style: none;
+  padding: 0;
+  counter-reset: s;
+}
+
+.steps > li {
+  counter-increment: s;
+  position: relative;
+  margin: 0 0 var(--space-5);
+  padding-left: 3rem;
+  max-width: var(--measure);
+}
+
+.steps > li::before {
+  content: counter(s);
+  position: absolute;
+  left: 0;
+  top: -0.1rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+.steps > li > :last-child {
+  margin-bottom: 0;
+}
+
+.step-result {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--rule-strong);
+}
+
+/* Checklist that also prints with empty boxes. */
+.checklist {
+  list-style: none;
+  padding: 0;
+}
+
+.checklist > li {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.checklist > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.3em;
+  width: 1.05rem;
+  height: 1.05rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+}
+
+/* Notes and warnings. The label carries the meaning, not the colour. */
+.callout {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--rule-strong);
+  border-left-width: 6px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  max-width: var(--measure);
+}
+
+.callout > :last-child {
+  margin-bottom: 0;
+}
+
+.callout-label {
+  margin: 0 0 var(--space-1);
+  font-weight: 600;
+}
+
+.callout-warning {
+  border-color: var(--ink);
+  border-style: solid;
+  border-left-width: 6px;
+}
+
+.callout-note {
+  border-left-color: var(--accent);
+}
+
+/* Figures. Every visual gets a caption and alt text. */
+.figure {
+  margin: var(--space-5) 0;
+}
+
+.figure img {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.figure figcaption {
+  margin-top: var(--space-2);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.figure-slot {
+  display: grid;
+  place-items: center;
+  min-height: 9rem;
+  padding: var(--space-4);
+  text-align: center;
+  color: var(--ink-soft);
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 11px,
+      color-mix(in srgb, var(--rule) 45%, transparent) 11px 12px
+    );
+}
+
+.figure-slot p {
+  margin: 0;
+}
+
+/* Tables scroll sideways on small screens instead of breaking the page. */
+.table-wrap {
+  margin: 0 0 var(--space-5);
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+}
+
+.table-wrap:focus-visible {
+  outline-offset: 0;
+}
+
+table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.9875rem;
+}
+
+caption {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--rule);
+}
+
+th,
+td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--rule);
+}
+
+thead th {
+  font-weight: 600;
+  background: var(--surface);
+  border-bottom: 2px solid var(--rule-strong);
+  white-space: nowrap;
+}
+
+tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+/* Questions and answers. */
+.faq {
+  max-width: var(--measure);
+  border-bottom: 1px solid var(--rule);
+}
+
+.faq:first-of-type {
+  border-top: 1px solid var(--rule);
+}
+
+.faq summary {
+  padding: var(--space-3) 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.faq > :not(summary) {
+  margin-left: var(--space-4);
+}
+
+/* Ready-to-copy text such as the Housing email. */
+.copy-block {
+  margin: 0 0 var(--space-5);
+  max-width: var(--measure);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.copy-block-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--rule);
+  font-weight: 600;
+}
+
+.copy-button {
+  font: inherit;
+  font-weight: 600;
+  min-height: 2.5rem;
+  padding: 0 var(--space-4);
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.copy-block pre {
+  margin: 0;
+  padding: var(--space-4);
+  font-family: var(--font);
+  font-size: 1rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Start Here: choose a building. */
+.building-cards {
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+  padding: 0;
+  max-width: var(--measure);
+}
+
+.building-cards > li {
+  margin: 0;
+  max-width: none;
+}
+
+.building-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.building-card:hover {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.building-letter {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: var(--radius);
+}
+
+.building-name {
+  display: block;
+  font-weight: 600;
+}
+
+.building-go {
+  display: block;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+@media (min-width: 36rem) {
+  .building-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Glossary. */
+.glossary dt {
+  margin-top: var(--space-5);
+  font-weight: 600;
+  scroll-margin-top: var(--space-5);
+}
+
+.glossary dd {
+  margin: var(--space-1) 0 0;
+}
+
+/* Reference list with an APA hanging indent. */
+.references {
+  list-style: none;
+  padding: 0;
+}
+
+.references > li {
+  padding-left: 2em;
+  text-indent: -2em;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Previous / next ---------- */
+.pager {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--rule);
+}
+
+.pager-item {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.pager-label {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.pager-item a {
+  font-weight: 600;
+}
+
+.pager-item a + a {
+  margin-left: var(--space-4);
+}
+
+@media (min-width: 36rem) {
+  .pager {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pager-next {
+    grid-column: 2;
+    text-align: right;
+  }
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  padding: var(--space-5) var(--space-4) var(--space-6);
+  border-top: 1px solid var(--rule);
+  background: var(--surface);
+  font-size: 0.9375rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  list-style: none;
+  margin: 0 0 var(--space-4);
+  padding: 0;
+}
+
+.footer-links > li {
+  margin: 0;
+}
+
+.footer-links a {
+  display: inline-block;
+  padding: var(--space-2) 0;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.site-footer p {
+  margin: 0 0 var(--space-1);
+  color: var(--ink-soft);
+}
+
+@media (min-width: 62rem) {
+  .site-footer {
+    padding-inline: var(--space-5);
+  }
+}
+
+/* ---------- Print: used for the PDF export ---------- */
+@page {
+  margin: 20mm 18mm 22mm;
+
+  @top-left {
+    content: "Printing in Residence";
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 9pt;
+  }
+
+  @bottom-center {
+    content: counter(page);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 9pt;
+  }
+}
+
+@media print {
+  :root {
+    --paper: #fff;
+    --surface: #fff;
+    --ink: #000;
+    --ink-soft: #333;
+    --rule: #999;
+    --rule-strong: #555;
+    --accent: #000;
+    --accent-tint: #fff;
+  }
+
+  body {
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+
+  .skip-link,
+  .site-header,
+  .site-nav,
+  .js .site-nav:not([data-open]),
+  .layers,
+  .toc,
+  .pager,
+  .footer-links,
+  .copy-button {
+    display: none;
+  }
+
+  .layout {
+    display: block;
+  }
+
+  .layout-main {
+    padding: 0;
+  }
+
+  h1 {
+    font-size: 22pt;
+  }
+
+  h2 {
+    font-size: 15pt;
+    break-after: avoid;
+  }
+
+  h3 {
+    break-after: avoid;
+  }
+
+  .figure,
+  .callout,
+  .steps > li,
+  tr {
+    break-inside: avoid;
+  }
+
+  .content a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+
+  .steps > li::before,
+  .building-letter {
+    color: #000;
+    background: #fff;
+    border: 1.5px solid #000;
+  }
+
+  .faq > :not(summary) {
+    display: block;
+  }
+}
+
+/* Printer explorer page only. */
+
+.explorer-stage {
+  position: relative;
+  height: min(70vh, 30rem);
+  min-height: 19rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.explorer-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.explorer-stage canvas:active {
+  cursor: grabbing;
+}
+
+.explorer-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: var(--radius);
+  pointer-events: none;
+}
+
+.explorer-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: var(--space-5);
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.explorer-fallback[hidden] {
+  display: none;
+}
+
+.explorer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.explorer-button,
+.part-button {
+  font: inherit;
+  font-weight: 600;
+  min-height: 2.75rem;
+  padding: 0 var(--space-4);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.explorer-button[aria-pressed="true"],
+.part-button[aria-pressed="true"] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.part-list {
+  list-style: none;
+  padding: 0;
+  max-width: var(--measure);
+}
+
+.part-list > li {
+  margin: 0;
+  padding: var(--space-3) 0 var(--space-3) var(--space-3);
+  border-top: 1px solid var(--rule);
+  border-left: 4px solid transparent;
+}
+
+.part-list > li.is-selected {
+  border-left-color: var(--ink);
+}
+
+.part-text {
+  margin: var(--space-2) 0 0;
+}
+
+@media print {
+  .explorer-stage,
+  .explorer-controls {
+    display: none;
+  }
+}
+
+/* Combined artifact shell: view switch, cinematic opening, search, reading progress. */
+[hidden] { display: none !important; }
+.page[hidden] { display: none; }
+
+.site-header { position: sticky; top: 0; z-index: 20; }
+.header-links { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+.view-switch {
+  font-weight: 600; font-size: 0.9375rem; padding: 0.35rem 0.75rem; white-space: nowrap;
+  border: 1px solid var(--rule-strong); border-radius: var(--radius); color: var(--ink); text-decoration: none;
+}
+.view-switch:hover { background: var(--accent-tint); }
+
+.read-progress { position: sticky; top: var(--hh, 3.25rem); z-index: 19; height: 3px; background: transparent; }
+.read-progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+
+.guide-search { margin: 0 0 var(--space-5); }
+.guide-search label { display: block; font-size: 0.875rem; font-weight: 600; color: var(--ink-soft); margin-bottom: var(--space-1); }
+.guide-search input {
+  width: 100%; font: inherit; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--rule-strong); border-radius: var(--radius); padding: 0.45rem 0.6rem;
+}
+.search-results { list-style: none; margin: var(--space-2) 0 0; padding: 0; }
+.search-results li { margin: 0; padding: var(--space-2) 0; border-top: 1px solid var(--rule); font-size: 0.9375rem; }
+.search-results .where { display: block; font-size: 0.8125rem; color: var(--ink-soft); }
+.search-none { font-size: 0.875rem; color: var(--ink-soft); margin: var(--space-2) 0 0; }
+
+.breadcrumb { font-size: 0.875rem; color: var(--ink-soft); margin: 0 0 var(--space-3); }
+.breadcrumb a { color: inherit; }
+.toc a.is-reading { font-weight: 700; }
+
+/* ---------- Cinematic opening (one dark world, both themes) ---------- */
+.intro { background: #0a0c0e; color: #f3f3ef; }
+.intro-track { position: relative; height: var(--track-h, 34rem); }
+.intro-stage {
+  position: sticky; top: var(--hh, 3.25rem); height: var(--stage-h, 34rem); overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 108%, #22292e 0%, #0f1215 46%, #0a0c0e 100%);
+}
+.intro canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.intro-copy {
+  position: absolute; left: 0; right: 0; top: 11%; padding: 0 var(--space-5); text-align: center; pointer-events: none;
+}
+.intro-kicker { margin: 0 0 var(--space-3); font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #a9b0b4; }
+.intro-title { margin: 0; font-size: clamp(2.4rem, 8vw, 5.5rem); font-weight: 700; line-height: 1; letter-spacing: -0.02em; text-wrap: balance; }
+.intro-title span { display: inline-block; white-space: pre; }
+.intro-sub { margin: var(--space-4) auto 0; max-width: 36rem; font-size: clamp(1rem, 2.4vw, 1.25rem); color: #c7cac4; }
+.intro-callout {
+  position: absolute; left: 0; top: 0; margin: 0; padding: 0.3rem 0.7rem; white-space: nowrap; pointer-events: none;
+  font-size: 0.9375rem; font-weight: 600; color: #0a0c0e; background: #7fd0a2; border-radius: var(--radius);
+}
+.intro-step { position: absolute; left: var(--space-5); bottom: 4.6rem; margin: 0; font-size: 0.8125rem; color: #a9b0b4; font-variant-numeric: tabular-nums; }
+.intro-actions { position: absolute; left: 0; right: 0; bottom: var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: center; padding: 0 var(--space-4); }
+.intro-button {
+  font: inherit; font-weight: 600; min-height: 2.75rem; padding: 0 var(--space-4); display: inline-flex; align-items: center;
+  color: #f3f3ef; background: rgba(243, 243, 239, 0.06); border: 1px solid #7b838a; border-radius: var(--radius); cursor: pointer; text-decoration: none;
+}
+.intro-button.is-primary { color: #0a0c0e; background: #7fd0a2; border-color: #7fd0a2; }
+.intro-button:focus-visible { outline: 3px solid #7fd0a2; outline-offset: 2px; }
+.intro-credit { position: absolute; right: var(--space-4); top: var(--space-3); margin: 0; font-size: 0.75rem; color: #7b838a; }
+.intro-hint { position: absolute; left: 50%; bottom: 5.2rem; transform: translateX(-50%); margin: 0; font-size: 0.8125rem; letter-spacing: 0.14em; text-transform: uppercase; color: #a9b0b4; }
+.intro.is-static .intro-hint, .intro.is-static .intro-step { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-title span { opacity: 0; transform: translateY(0.35em); animation: intro-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i) * 38ms + 250ms); }
+  .intro-kicker, .intro-sub { opacity: 0; animation: intro-fade 0.9s ease forwards; }
+  .intro-kicker { animation-delay: 0.1s; }
+  .intro-sub { animation-delay: 1.3s; }
+  .intro-hint { animation: intro-bob 1.8s ease-in-out infinite; }
+  .page { animation: page-in 0.28s ease; }
+}
+@keyframes intro-rise { to { opacity: 1; transform: none; } }
+@keyframes intro-fade { to { opacity: 1; } }
+@keyframes intro-bob { 50% { transform: translate(-50%, 5px); } }
+@keyframes page-in { from { opacity: 0.4; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+@media (max-width: 36rem) {
+  .intro-copy { top: 8%; }
+  .intro-credit { left: var(--space-4); right: auto; }
+}
+@media print { .intro, .read-progress, .guide-search, .view-switch { display: none; } }
+
+/* ---------- Workspace inside the shell ---------- */
+#ws header.top { position: static; }
+#ws .ws-private { font-size: 0.8125rem; color: var(--ink-soft); }
+#ws h2 { border: 0; padding-top: 0; margin-top: 0; }
+#ws h2::before, #ws h3::before { content: none; }
+
+/* ---- workspace (scoped) ---- */
+:root{
+  color-scheme:light;
+  --paper:#f3f3ef; --surface:#fbfbf8; --ink:#1b1f23; --ink-soft:#4a5157;
+  --rule:#c7cac4; --rule-strong:#7d848a; --accent:#14633c; --accent-tint:#dcebe1;
+  --warn:#8a4b00; --warn-tint:#f6e7cf; --bad:#9b1c1c; --bad-tint:#f6dddd; --idle-tint:#e6e7e2;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#15181b; --surface:#1d2125; --ink:#ecebe6; --ink-soft:#a9b0b4;
+    --rule:#353b40; --rule-strong:#7b838a; --accent:#7fd0a2; --accent-tint:#1f3a2b;
+    --warn:#f0b866; --warn-tint:#3b2c12; --bad:#f29a9a; --bad-tint:#3d1c1c; --idle-tint:#2a2f34;
+  }}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#15181b; --surface:#1d2125; --ink:#ecebe6; --ink-soft:#a9b0b4;
+  --rule:#353b40; --rule-strong:#7b838a; --accent:#7fd0a2; --accent-tint:#1f3a2b;
+  --warn:#f0b866; --warn-tint:#3b2c12; --bad:#f29a9a; --bad-tint:#3d1c1c; --idle-tint:#2a2f34;
+}
+#ws *{box-sizing:border-box}
+#ws{color:var(--ink);font:400 16px/1.5 var(--font)}
+#ws a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+#ws :focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#ws h1,#ws h2,#ws h3{text-wrap:balance;line-height:1.2;margin:0}
+#ws h1{font-size:1.25rem;font-weight:700}
+#ws h2{font-size:1.35rem;font-weight:700;margin-bottom:.25rem}
+#ws h3{font-size:1rem;font-weight:600}
+#ws p{margin:0}
+#ws .num{font-variant-numeric:tabular-nums}
+#ws .soft{color:var(--ink-soft)}
+#ws .small{font-size:.875rem}
+#ws header.top{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:5}
+#ws .top-row{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;padding:.75rem 1rem;max-width:76rem;margin:0 auto}
+#ws .who{display:flex;gap:.5rem;align-items:center;font-size:.875rem}
+#ws nav.tabs{display:flex;gap:.25rem;overflow-x:auto;padding:0 1rem;max-width:76rem;margin:0 auto}
+#ws nav.tabs a{padding:.5rem .75rem;white-space:nowrap;text-decoration:none;color:var(--ink-soft);border-bottom:3px solid transparent;font-weight:500}
+#ws nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+#ws .ws-main{max-width:76rem;margin:0 auto;padding:1.25rem 1rem 4rem;display:flex;flex-direction:column;gap:1.25rem}
+#ws .banner{background:var(--warn-tint);color:var(--ink);border-left:4px solid var(--warn);padding:.6rem .8rem;border-radius:var(--r)}
+#ws .grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))}
+#ws .panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:1rem;display:flex;flex-direction:column;gap:.6rem;min-width:0}
+#ws .big{font-size:2rem;font-weight:700;line-height:1}
+#ws .bar{height:.6rem;background:var(--idle-tint);border-radius:1rem;overflow:hidden}
+#ws .bar>span{display:block;height:100%;background:var(--accent)}
+#ws .rowline{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline}
+#ws ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+#ws ul.plain li{display:flex;gap:.6rem;justify-content:space-between;align-items:baseline;border-top:1px solid var(--rule);padding-top:.5rem}
+#ws ul.plain li:first-child{border-top:0;padding-top:0}
+#ws .chip{display:inline-block;font-size:.78rem;font-weight:600;padding:.1rem .5rem;border-radius:1rem;border:1px solid var(--rule-strong);white-space:nowrap}
+#ws .s-done{background:var(--accent-tint);border-color:var(--accent);color:var(--ink)}
+#ws .s-prog{background:var(--warn-tint);border-color:var(--warn)}
+#ws .s-block,#ws .s-late{background:var(--bad-tint);border-color:var(--bad)}
+#ws .s-none{background:var(--idle-tint)}
+#ws .tools{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:end}
+#ws label.f{display:flex;flex-direction:column;gap:.2rem;font-size:.8rem;font-weight:600;color:var(--ink-soft)}
+#ws select,#ws input,#ws textarea,#ws button{font:inherit;color:var(--ink)}
+#ws select,#ws input[type=text],#ws input[type=date],#ws textarea{background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--r);padding:.35rem .5rem;max-width:100%}
+#ws textarea{width:100%;min-height:5rem;resize:vertical}
+#ws button{background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--r);padding:.4rem .8rem;font-weight:600;cursor:pointer}
+#ws button.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+#ws button.link{border:0;background:none;padding:0;color:var(--ink);text-align:left;font-weight:600;text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+#ws .kanban{display:grid;gap:.75rem;grid-template-columns:repeat(4,minmax(15rem,1fr));overflow-x:auto;padding-bottom:.5rem}
+#ws .col{background:var(--idle-tint);border-radius:var(--r);padding:.6rem;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+#ws .col h3{display:flex;justify-content:space-between}
+#ws .card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:.6rem;display:flex;flex-direction:column;gap:.4rem}
+#ws .card.late{border-left:4px solid var(--bad)}
+#ws .meta{display:flex;flex-wrap:wrap;gap:.35rem .6rem;align-items:center;font-size:.8rem;color:var(--ink-soft)}
+#ws .tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r)}
+#ws table{border-collapse:collapse;width:100%;font-size:.92rem}
+#ws th,#ws td{text-align:left;padding:.5rem .65rem;border-bottom:1px solid var(--rule);vertical-align:top}
+#ws th{font-size:.78rem;text-transform:none;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+#ws tr:last-child td{border-bottom:0}
+#ws td.note{max-width:28rem;color:var(--ink-soft)}
+#ws dialog{border:1px solid var(--rule-strong);border-radius:var(--r);background:var(--surface);color:var(--ink);width:min(36rem,calc(100vw - 2rem));padding:1rem}
+#ws dialog::backdrop{background:rgba(0,0,0,.45)}
+#ws dialog form{display:flex;flex-direction:column;gap:.7rem}
+#ws .two{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+#ws .comments{display:flex;flex-direction:column;gap:.4rem;border-top:1px solid var(--rule);padding-top:.6rem}
+#ws .comment{background:var(--paper);border-radius:var(--r);padding:.4rem .6rem;font-size:.9rem}
+#ws .actions{display:flex;gap:.5rem;justify-content:space-between;flex-wrap:wrap}
+#ws #toast{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:.5rem .9rem;border-radius:var(--r);font-size:.9rem;display:none;max-width:calc(100vw - 2rem)}
+@media (max-width:40rem){#ws .two{grid-template-columns:1fr}
+#ws .kanban{grid-template-columns:repeat(4,82vw)}}
+@media (prefers-reduced-motion:no-preference){#ws .bar>span{transition:width .3s}}
+</style>
+<script>document.documentElement.classList.add("js");</script>
+</head>
+<body>
+<a class="skip-link" href="#guide-body">Skip to content</a>
+<header class="site-header">
+    <a class="site-title" href="#start-here">Printing in Residence</a>
+    <div class="header-links"><a class="view-switch" id="view-switch" href="#team">Team workspace</a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button></div>
+  </header>
+<div id="guide">
+<section class="intro" id="intro" aria-label="Opening">
+  <div class="intro-track">
+    <div class="intro-stage">
+      <canvas aria-hidden="true"></canvas>
+      <div class="intro-copy">
+        <p class="intro-kicker">CMNS 390 · University of the Fraser Valley · Fall 2026</p>
+        <p class="intro-title">Printing in Residence</p>
+        <p class="intro-sub">Running a Bambu Lab H2S in UFV Student Housing</p>
+      </div>
+      <p class="intro-callout" id="intro-callout" aria-hidden="true" hidden></p>
+      <p class="intro-step" id="intro-step" aria-hidden="true"></p>
+      <p class="intro-hint" aria-hidden="true">Scroll</p>
+      <p class="intro-credit">Decorative illustration, simplified and not to scale. AI generated image.</p>
+      <div class="intro-actions">
+        <button type="button" class="intro-button is-primary" id="intro-skip">Skip intro</button>
+        <a class="intro-button" href="#printer-explorer">Explore the printer</a>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="read-progress" aria-hidden="true"><span></span></div>
+<div class="layout" id="guide-body">
+<nav class="site-nav" id="site-nav" aria-label="Guide">
+<div class="guide-search" role="search"><label for="guide-search">Search the guide</label><input type="search" id="guide-search" autocomplete="off"><ul class="search-results" id="search-results" aria-live="polite"></ul><p class="search-none" id="search-none" hidden>No section matches that.</p></div>
+      <p class="nav-heading" id="nav-steps-title">The five steps</p>
+      <ol class="nav-steps" aria-labelledby="nav-steps-title">
+        <li><a href="#start-here">Start Here</a></li>
+        <li><a href="#ask-housing-first">Ask Housing First</a></li>
+        <li>
+          <span class="nav-step-name">Get online in your building</span>
+          <ul class="nav-buildings">
+            <li><a href="#get-online-h-building">H Building</a></li>
+            <li><a href="#get-online-j-building">J Building</a></li>
+          </ul>
+        </li>
+        <li><a href="#connection-troubleshooting">Connection Troubleshooting</a></li>
+        <li><a href="#room-setup-and-inspection">Room Setup and Inspection</a></li>
+      </ol>
+      <p class="nav-heading" id="nav-ref-title">Reference</p>
+      <ul class="nav-reference" aria-labelledby="nav-ref-title">
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#references">References</a></li>
+        <li><a href="#about-and-credits">About and Credits</a></li>
+        <li><a href="#printer-explorer">Printer explorer</a></li>
+      </ul>
+    </nav>
+<main class="layout-main" id="main">
+<div class="content">
+<article class="page" data-page="start-here">
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Start Here</p>
+
+<!-- Owner: Beckett. Target: about 700 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 1 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-now" style="--i:0" pathLength="1" d="M22 97.0 H408"/>
+          <path class="nozzle" style="--i:0" d="M401 80.0 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M32 86.5 H698"/>
+          <path class="layer layer-ghost" d="M22 76.0 H688"/>
+          <path class="layer layer-ghost" d="M32 65.5 H698"/>
+          <path class="layer layer-ghost" d="M22 55.0 H688"/>
+          <path class="layer layer-ghost" d="M32 44.5 H698"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 1 of 5</p>
+      <h1>Start Here</h1>
+      <p class="draft-note">Draft. Text carried over from the Master Draft; not yet revised.</p>
+      <nav class="toc" aria-labelledby="start-here--toc-title">
+        <p class="toc-title" id="start-here--toc-title">On this page</p>
+        <ol>
+            <li><a href="#start-here--what-this-guide-is-and-who-it-is-for">What this guide is and who it is for</a></li>
+            <li><a href="#start-here--not-an-official-ufv-document">Not an official UFV document</a></li>
+            <li><a href="#start-here--what-we-skip">What we skip</a></li>
+            <li><a href="#start-here--pick-your-building">Pick your building</a></li>
+            <li><a href="#start-here--before-you-start-checklist">Before you start checklist</a></li>
+            <li><a href="#start-here--the-five-steps-at-a-glance">The five steps at a glance</a></li>
+            <li><a href="#start-here--safety-note">Safety note</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="start-here--what-this-guide-is-and-who-it-is-for">What this guide is and who it is for</h2>
+        <p>Printing in Residence is a guide for UFV students who live in student housing and own, or are about to buy, a Bambu Lab H2S 3D printer. It covers the three things other guides leave out: asking Housing first, getting the printer online, and setting up your room so it passes inspection.</p>
+        <p>You do not need any 3D printing or networking background. If you can use a phone and a laptop, you can follow every step.</p>
+
+        <h2 id="start-here--not-an-official-ufv-document">Not an official UFV document</h2>
+        <p>Three CMNS 390 students made this guide. It does not come from UFV Housing or from Bambu Lab.</p>
+        <p>The 2026-27 housing handbook does not mention 3D printers at all (University of the Fraser Valley [UFV], 2026). That means Housing's written answer to you always comes before anything on this site. If you are not sure about something, email <a href="mailto:housing@ufv.ca">housing@ufv.ca</a> and ask.</p>
+
+        <h2 id="start-here--what-we-skip">What we skip</h2>
+        <p>Bambu Lab already explains how to unbox the printer, run a first print and slice a model, so we do not repeat any of it. Use their guides for those steps:</p>
+        <ul>
+          <li><a href="https://wiki.bambulab.com/en/h2s/manual/unboxing-h2s">Unboxing the H2S</a></li>
+          <li><a href="https://wiki.bambulab.com/en/h2s/manual/unboxing-ams-combo-and-laser-full-combo">Unboxing the AMS Combo and Laser Full Combo</a></li>
+          <li><a href="https://wiki.bambulab.com/en/h2s/manual/h2s-intro">The parts of the printer</a></li>
+          <li><a href="https://wiki.bambulab.com/en/h2s">First Print Guide, on the H2S wiki home</a></li>
+          <li><a href="https://wiki.bambulab.com/en/software/bambu-studio/studio-quick-start">Slicing in Bambu Studio</a></li>
+          <li><a href="https://wiki.bambulab.com/en/h2/manual/h2s-faq">H2S frequently asked questions</a></li>
+        </ul>
+        <p>Come back here once the printer is out of the box.</p>
+
+        <h2 id="start-here--pick-your-building">Pick your building</h2>
+        <p>The internet works differently in each building, so the first step is knowing which one you live in.</p>
+        <!-- Visual 1 (building chooser). These two cards are the working version. -->
+        <ul class="building-cards" id="start-here--visual-1">
+          <li class="building-card">
+            <span class="building-letter" aria-hidden="true">H</span>
+            <div>
+              <span class="building-name">H Building (Lá:lem te Baker)</span>
+              <a class="building-go" href="#get-online-h-building">Get Online in H Building</a>
+            </div>
+          </li>
+          <li class="building-card">
+            <span class="building-letter" aria-hidden="true">J</span>
+            <div>
+              <span class="building-name">J Building (Lá:léms Ye EverGreen)</span>
+              <a class="building-go" href="#get-online-j-building">Get Online in J Building</a>
+            </div>
+          </li>
+        </ul>
+        <p><strong>H Building (Lá:lem te Baker).</strong> You live in a Double, with two private bedrooms that share a kitchenette and a bathroom. Your bedroom has its own Wi-Fi modem on hardwired Rogers internet (UFV, 2026). Follow <a href="#get-online-h-building">Get Online in H Building</a>.</p>
+        <p><strong>J Building (Lá:léms Ye EverGreen).</strong> You live in a Quad, a Studio or a Single. The building uses eduroam, and devices that cannot join eduroam go on a second network called UFV-Gamer (UFV, 2026). Follow <a href="#get-online-j-building">Get Online in J Building</a>.</p>
+        <p>Every other page is the same for both buildings. H Building is closed for construction right now, so we tested every step in J Building only.</p>
+
+        <h2 id="start-here--before-you-start-checklist">Before you start checklist</h2>
+        <p>Have these ready before you go any further:</p>
+        <ul class="checklist">
+          <li>You know which building you live in.</li>
+          <li>You have Housing's answer in writing. If you do not, start with <a href="#ask-housing-first">Ask Housing First</a>.</li>
+          <li>You know the printer's numbers. It weighs 30 kg, it is about 49 cm wide, 51 cm deep and 63 cm tall, and it can draw up to 1,170 W for about 3 minutes while the bed heats up (Bambu Lab, 2025).</li>
+          <li>You have a Bambu Lab account and the Bambu Handy app on your phone.</li>
+          <li>You have your UFV student email and password.</li>
+          <li>J Building only: you know where to find the printer's MAC address. We show you on the J Building page.</li>
+          <li>You are not planning to use your own Wi-Fi router. Routers are on the prohibited items list (UFV, 2026).</li>
+        </ul>
+
+        <h2 id="start-here--the-five-steps-at-a-glance">The five steps at a glance</h2>
+        <p>The whole guide is five steps. Each one has its own page.</p>
+        <!-- Visual 2 (five-step overview). This numbered list is the working version. -->
+        <ol class="steps" id="start-here--visual-2">
+          <li><strong>Find your building.</strong> You just did this above.</li>
+          <li><strong><a href="#ask-housing-first">Ask Housing first.</a></strong> Email Housing before the printer arrives and keep their reply.</li>
+          <li><strong>Get online.</strong> Follow the page for <a href="#get-online-h-building">H Building</a> or <a href="#get-online-j-building">J Building</a>.</li>
+          <li><strong><a href="#connection-troubleshooting">Fix connection problems.</a></strong> Check the troubleshooting table if the printer will not connect.</li>
+          <li><strong><a href="#room-setup-and-inspection">Set up your room.</a></strong> Pick the spot, sort out power and air, and get ready for inspection.</li>
+        </ol>
+
+        <h2 id="start-here--safety-note">Safety note</h2>
+        <div class="callout callout-warning">
+          <p class="callout-label">Safety</p>
+          <p>The H2S is a machine that gets hot. The bed and nozzle heat up, and the chamber can reach 65 °C (Bambu Lab, 2025). It also pulls its full power for about 3 minutes at the start of a print.</p>
+          <p>The printer has a HEPA filter and an activated carbon filter built in. That helps with air quality, but it does not replace asking Housing.</p>
+          <p><a href="#room-setup-and-inspection">Room Setup and Inspection</a> covers power, air, noise and fire safety in detail. Read it before your first print in your room.</p>
+        </div>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-next"><span class="pager-label">Next</span> <a href="#ask-housing-first">Ask Housing First</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="ask-housing-first" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Ask Housing First</p>
+
+<!-- Owner: Jade. Target: about 1,400 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 2 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-now" style="--i:1" pathLength="1" d="M32 86.5 H418"/>
+          <path class="nozzle" style="--i:1" d="M411 69.5 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M22 76.0 H688"/>
+          <path class="layer layer-ghost" d="M32 65.5 H698"/>
+          <path class="layer layer-ghost" d="M22 55.0 H688"/>
+          <path class="layer layer-ghost" d="M32 44.5 H698"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 2 of 5</p>
+      <h1>Ask Housing First</h1>
+      <p class="draft-note">Draft skeleton. Headings only; the text is still being written.</p>
+      <nav class="toc" aria-labelledby="ask-housing-first--toc-title">
+        <p class="toc-title" id="ask-housing-first--toc-title">On this page</p>
+        <ol>
+            <li><a href="#ask-housing-first--why-you-ask-before-the-printer-arrives">Why you ask before the printer arrives</a></li>
+            <li><a href="#ask-housing-first--what-the-handbook-says">What the handbook says</a></li>
+            <li><a href="#ask-housing-first--what-to-send-housing">What to send Housing</a></li>
+            <li><a href="#ask-housing-first--email-template">Email template</a></li>
+            <li><a href="#ask-housing-first--what-happens-next">What happens next</a></li>
+            <li><a href="#ask-housing-first--if-housing-says-no">If Housing says no</a></li>
+            <li><a href="#ask-housing-first--faq">FAQ</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="ask-housing-first--why-you-ask-before-the-printer-arrives">Why you ask before the printer arrives</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="ask-housing-first--what-the-handbook-says">What the handbook says</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="ask-housing-first--what-to-send-housing">What to send Housing</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="ask-housing-first--email-template">Email template</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="ask-housing-first--visual-4">
+          <!-- Visual 4. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 4: Housing email template graphic</p></div>
+          <figcaption>Figure 4. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="ask-housing-first--what-happens-next">What happens next</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="ask-housing-first--if-housing-says-no">If Housing says no</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="ask-housing-first--faq">FAQ</h2>
+        <p class="placeholder">To be written.</p>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-prev"><span class="pager-label">Previous</span> <a href="#start-here">Start Here</a></p>
+        <p class="pager-item pager-next"><span class="pager-label">Next</span> <a href="#get-online-h-building">Get Online in H Building</a> <a href="#get-online-j-building">Get Online in J Building</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="get-online-h-building" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Get Online in H Building</p>
+
+<!-- Owner: Bennett. Target: about 1,200 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 3 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-now" style="--i:2" pathLength="1" d="M22 76.0 H408"/>
+          <path class="nozzle" style="--i:2" d="M401 59.0 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M32 65.5 H698"/>
+          <path class="layer layer-ghost" d="M22 55.0 H688"/>
+          <path class="layer layer-ghost" d="M32 44.5 H698"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 3 of 5, H Building</p>
+      <h1>Get Online in H Building</h1>
+      <p class="draft-note">Draft skeleton. Headings only; the text is still being written.</p>
+      <nav class="toc" aria-labelledby="get-online-h-building--toc-title">
+        <p class="toc-title" id="get-online-h-building--toc-title">On this page</p>
+        <ol>
+            <li><a href="#get-online-h-building--how-internet-works-in-h-building">How internet works in H Building</a></li>
+            <li><a href="#get-online-h-building--what-the-printer-supports">What the printer supports</a></li>
+            <li><a href="#get-online-h-building--connect-the-printer-to-wi-fi">Connect the printer to Wi-Fi</a></li>
+            <li><a href="#get-online-h-building--bind-it-in-bambu-handy">Bind it in Bambu Handy</a></li>
+            <li><a href="#get-online-h-building--print-from-a-laptop-with-bambu-studio">Print from a laptop with Bambu Studio</a></li>
+            <li><a href="#get-online-h-building--lan-mode-vs-cloud-printing">LAN mode vs cloud printing</a></li>
+            <li><a href="#get-online-h-building--faq">FAQ</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="get-online-h-building--how-internet-works-in-h-building">How internet works in H Building</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-h-building--what-the-printer-supports">What the printer supports</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-h-building--connect-the-printer-to-wi-fi">Connect the printer to Wi-Fi</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-h-building--visual-8">
+          <!-- Visual 8. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 8: Printer touchscreen network menu</p></div>
+          <figcaption>Figure 8. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-h-building--bind-it-in-bambu-handy">Bind it in Bambu Handy</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-h-building--visual-11">
+          <!-- Visual 11. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 11: Bambu Handy binding, step 1</p></div>
+          <figcaption>Figure 11. Caption to come.</figcaption>
+        </figure>
+        <figure class="figure" id="get-online-h-building--visual-12">
+          <!-- Visual 12. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 12: Bambu Handy binding, step 2</p></div>
+          <figcaption>Figure 12. Caption to come.</figcaption>
+        </figure>
+        <figure class="figure" id="get-online-h-building--visual-13">
+          <!-- Visual 13. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 13: Bambu Handy binding, step 3</p></div>
+          <figcaption>Figure 13. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-h-building--print-from-a-laptop-with-bambu-studio">Print from a laptop with Bambu Studio</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-h-building--lan-mode-vs-cloud-printing">LAN mode vs cloud printing</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-h-building--faq">FAQ</h2>
+        <p class="placeholder">To be written.</p>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-prev"><span class="pager-label">Previous</span> <a href="#ask-housing-first">Ask Housing First</a></p>
+        <p class="pager-item pager-next"><span class="pager-label">Next</span> <a href="#connection-troubleshooting">Connection Troubleshooting</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="get-online-j-building" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Get Online in J Building</p>
+
+<!-- Owner: Bennett. Target: about 1,400 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 4 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-now" style="--i:3" pathLength="1" d="M32 65.5 H418"/>
+          <path class="nozzle" style="--i:3" d="M411 48.5 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M22 55.0 H688"/>
+          <path class="layer layer-ghost" d="M32 44.5 H698"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 3 of 5, J Building</p>
+      <h1>Get Online in J Building</h1>
+      <p class="draft-note">Draft skeleton. Headings only; the text is still being written.</p>
+      <nav class="toc" aria-labelledby="get-online-j-building--toc-title">
+        <p class="toc-title" id="get-online-j-building--toc-title">On this page</p>
+        <ol>
+            <li><a href="#get-online-j-building--why-eduroam-will-not-work">Why eduroam will not work</a></li>
+            <li><a href="#get-online-j-building--why-a-personal-router-is-not-an-option">Why a personal router is not an option</a></li>
+            <li><a href="#get-online-j-building--find-the-printer-s-mac-address">Find the printer&#x27;s MAC address</a></li>
+            <li><a href="#get-online-j-building--register-it-on-the-gaming-network">Register it on the gaming network</a></li>
+            <li><a href="#get-online-j-building--connect-and-bind">Connect and bind</a></li>
+            <li><a href="#get-online-j-building--can-a-laptop-on-eduroam-reach-the-printer">Can a laptop on eduroam reach the printer?</a></li>
+            <li><a href="#get-online-j-building--faq">FAQ</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="get-online-j-building--why-eduroam-will-not-work">Why eduroam will not work</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-j-building--visual-14">
+          <!-- Visual 14. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 14: Diagram: eduroam vs gaming network vs Bambu cloud</p></div>
+          <figcaption>Figure 14. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-j-building--why-a-personal-router-is-not-an-option">Why a personal router is not an option</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-j-building--find-the-printer-s-mac-address">Find the printer&#x27;s MAC address</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-j-building--visual-9">
+          <!-- Visual 9. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 9: MAC address screen</p></div>
+          <figcaption>Figure 9. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-j-building--register-it-on-the-gaming-network">Register it on the gaming network</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-j-building--visual-10">
+          <!-- Visual 10. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 10: Gaming network registration portal</p></div>
+          <figcaption>Figure 10. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-j-building--connect-and-bind">Connect and bind</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="get-online-j-building--visual-8-j">
+          <!-- Visual 8. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 8: Printer touchscreen network menu</p></div>
+          <figcaption>Figure 8. Caption to come.</figcaption>
+        </figure>
+        <figure class="figure" id="get-online-j-building--visual-11-j">
+          <!-- Visual 11. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 11: Bambu Handy binding, step 1</p></div>
+          <figcaption>Figure 11. Caption to come.</figcaption>
+        </figure>
+        <figure class="figure" id="get-online-j-building--visual-12-j">
+          <!-- Visual 12. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 12: Bambu Handy binding, step 2</p></div>
+          <figcaption>Figure 12. Caption to come.</figcaption>
+        </figure>
+        <figure class="figure" id="get-online-j-building--visual-13-j">
+          <!-- Visual 13. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 13: Bambu Handy binding, step 3</p></div>
+          <figcaption>Figure 13. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="get-online-j-building--can-a-laptop-on-eduroam-reach-the-printer">Can a laptop on eduroam reach the printer?</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="get-online-j-building--faq">FAQ</h2>
+        <p class="placeholder">To be written.</p>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-prev"><span class="pager-label">Previous</span> <a href="#ask-housing-first">Ask Housing First</a></p>
+        <p class="pager-item pager-next"><span class="pager-label">Next</span> <a href="#connection-troubleshooting">Connection Troubleshooting</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="connection-troubleshooting" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Connection Troubleshooting</p>
+
+<!-- Owner: Bennett. Target: about 400 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 5 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-done" style="--i:3" pathLength="1" d="M32 65.5 H698"/>
+          <path class="layer layer-now" style="--i:4" pathLength="1" d="M22 55.0 H408"/>
+          <path class="nozzle" style="--i:4" d="M401 38.0 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M32 44.5 H698"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 4 of 5</p>
+      <h1>Connection Troubleshooting</h1>
+      <p class="draft-note">Draft skeleton. Headings only; the text is still being written.</p>
+
+        <h2 id="connection-troubleshooting--symptoms-causes-and-fixes">Symptoms, causes and fixes</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Connection problems and fixes">
+          <table>
+            <thead>
+              <tr><th scope="col">Symptom</th><th scope="col">Likely cause</th><th scope="col">Fix</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>To be written.</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-prev"><span class="pager-label">Previous</span> <a href="#get-online-h-building">Get Online in H Building</a> <a href="#get-online-j-building">Get Online in J Building</a></p>
+        <p class="pager-item pager-next"><span class="pager-label">Next</span> <a href="#room-setup-and-inspection">Room Setup and Inspection</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="room-setup-and-inspection" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / The five steps / Room Setup and Inspection</p>
+
+<!-- Owner: Jade. Target: about 1,600 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 6 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-done" style="--i:3" pathLength="1" d="M32 65.5 H698"/>
+          <path class="layer layer-done" style="--i:4" pathLength="1" d="M22 55.0 H688"/>
+          <path class="layer layer-now" style="--i:5" pathLength="1" d="M32 44.5 H418"/>
+          <path class="nozzle" style="--i:5" d="M411 27.5 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M22 34.0 H688"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <p class="step-label">Step 5 of 5</p>
+      <h1>Room Setup and Inspection</h1>
+      <p class="draft-note">Draft skeleton. Headings only; the text is still being written.</p>
+      <nav class="toc" aria-labelledby="room-setup-and-inspection--toc-title">
+        <p class="toc-title" id="room-setup-and-inspection--toc-title">On this page</p>
+        <ol>
+            <li><a href="#room-setup-and-inspection--pick-the-spot">Pick the spot</a></li>
+            <li><a href="#room-setup-and-inspection--power-and-outlets">Power and outlets</a></li>
+            <li><a href="#room-setup-and-inspection--air-fumes-and-filament-choice">Air, fumes and filament choice</a></li>
+            <li><a href="#room-setup-and-inspection--noise-and-quiet-hours">Noise and quiet hours</a></li>
+            <li><a href="#room-setup-and-inspection--fire-safety">Fire safety</a></li>
+            <li><a href="#room-setup-and-inspection--filter-maintenance-schedule">Filter maintenance schedule</a></li>
+            <li><a href="#room-setup-and-inspection--filament-storage-and-waste">Filament storage and waste</a></li>
+            <li><a href="#room-setup-and-inspection--getting-ready-for-room-inspection">Getting ready for room inspection</a></li>
+            <li><a href="#room-setup-and-inspection--moving-out">Moving out</a></li>
+            <li><a href="#room-setup-and-inspection--faq">FAQ</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="room-setup-and-inspection--pick-the-spot">Pick the spot</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="room-setup-and-inspection--visual-5">
+          <!-- Visual 5. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 5: Desk placement diagram (desk, clearance, window, outlet)</p></div>
+          <figcaption>Figure 5. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="room-setup-and-inspection--power-and-outlets">Power and outlets</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--air-fumes-and-filament-choice">Air, fumes and filament choice</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--noise-and-quiet-hours">Noise and quiet hours</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--fire-safety">Fire safety</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--filter-maintenance-schedule">Filter maintenance schedule</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="room-setup-and-inspection--visual-6">
+          <!-- Visual 6. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 6: Filter location photo or diagram</p></div>
+          <figcaption>Figure 6. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="room-setup-and-inspection--filament-storage-and-waste">Filament storage and waste</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--getting-ready-for-room-inspection">Getting ready for room inspection</h2>
+        <p class="placeholder">To be written.</p>
+        <figure class="figure" id="room-setup-and-inspection--visual-7">
+          <!-- Visual 7. Replace the div below with:
+               <img src="assets/img/FILE" alt="DESCRIBE WHAT IT SHOWS" width="W" height="H"> -->
+          <div class="figure-slot"><p>Visual 7: Room inspection checklist graphic</p></div>
+          <figcaption>Figure 7. Caption to come.</figcaption>
+        </figure>
+
+        <h2 id="room-setup-and-inspection--moving-out">Moving out</h2>
+        <p class="placeholder">To be written.</p>
+
+        <h2 id="room-setup-and-inspection--faq">FAQ</h2>
+        <p class="placeholder">To be written.</p>
+
+      <nav class="pager" aria-label="Previous and next page">
+        <p class="pager-item pager-prev"><span class="pager-label">Previous</span> <a href="#connection-troubleshooting">Connection Troubleshooting</a></p>
+      </nav>
+      
+</article>
+<article class="page" data-page="glossary" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / Reference / Glossary</p>
+
+<!-- Owner: Beckett compiles; Jade and Bennett send 4 to 6 terms each. Target: about 400 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 7 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-done" style="--i:3" pathLength="1" d="M32 65.5 H698"/>
+          <path class="layer layer-done" style="--i:4" pathLength="1" d="M22 55.0 H688"/>
+          <path class="layer layer-done" style="--i:5" pathLength="1" d="M32 44.5 H698"/>
+          <path class="layer layer-now" style="--i:6" pathLength="1" d="M22 34.0 H408"/>
+          <path class="nozzle" style="--i:6" d="M401 17.0 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M32 23.5 H698"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <h1>Glossary</h1>
+      <p class="draft-note">Draft. Beckett's terms from the Master Draft; Jade's and Bennett's terms still to come.</p>
+
+        <h2 id="glossary--terms">Terms</h2>
+        <!-- Link to a term from any page with glossary.html#term-id, for example glossary.html#eduroam.
+             Jade's and Bennett's terms still to come; keep the list in alphabetical order. -->
+        <dl class="glossary">
+          <dt id="glossary--bambu-handy">Bambu Handy</dt>
+          <dd>Bambu Lab&#x27;s phone app. You use it to set up the printer, watch a print and control it from your phone.</dd>
+          <dt id="glossary--bambu-studio">Bambu Studio</dt>
+          <dd>Bambu Lab&#x27;s free computer program. It turns a 3D model into a file the printer can print, which is called slicing.</dd>
+          <dt id="glossary--community-assistant-ca">Community Assistant (CA)</dt>
+          <dd>A student staff member who lives in residence and supports the residents on their floor.</dd>
+          <dt id="glossary--eduroam">eduroam</dt>
+          <dd>The secure Wi-Fi network used at universities. You sign in with your student email and password.</dd>
+          <dt id="glossary--h-building">H Building</dt>
+          <dd>Lá:lem te Baker, the UFV residence with two-bedroom Double suites.</dd>
+          <dt id="glossary--j-building">J Building</dt>
+          <dd>Lá:léms Ye EverGreen, the six-storey UFV residence with Quads, Studios and Singles.</dd>
+          <dt id="glossary--mac-address">MAC address</dt>
+          <dd>A code built into every device that connects to a network. It is six pairs of letters and numbers separated by colons.</dd>
+          <dt id="glossary--ufv-gamer">UFV-Gamer</dt>
+          <dd>A second network in J Building for devices that cannot sign in to eduroam. Housing adds your device by its MAC address (UFV, 2026).</dd>
+        </dl>
+
+
+      
+</article>
+<article class="page" data-page="references" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / Reference / References</p>
+
+<!-- Owner: Beckett compiles from the Research Notebook. Target: APA 7. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 8 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-done" style="--i:3" pathLength="1" d="M32 65.5 H698"/>
+          <path class="layer layer-done" style="--i:4" pathLength="1" d="M22 55.0 H688"/>
+          <path class="layer layer-done" style="--i:5" pathLength="1" d="M32 44.5 H698"/>
+          <path class="layer layer-done" style="--i:6" pathLength="1" d="M22 34.0 H688"/>
+          <path class="layer layer-now" style="--i:7" pathLength="1" d="M32 23.5 H418"/>
+          <path class="nozzle" style="--i:7" d="M411 6.5 h14 l-7 11 z"/>
+          <path class="layer layer-ghost" d="M22 13.0 H688"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <h1>References</h1>
+      <p class="draft-note">Draft. First list from the Master Draft, compiled Nov 15; more sources still to come.</p>
+      <nav class="toc" aria-labelledby="references--toc-title">
+        <p class="toc-title" id="references--toc-title">On this page</p>
+        <ol>
+            <li><a href="#references--sources">Sources</a></li>
+            <li><a href="#references--generative-ai-use">Generative AI use</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="references--sources">Sources</h2>
+        <!-- APA 7, alphabetical. Compiled Nov 15 from the Research Notebook.
+             Add Jade's and Bennett's sources as their cards fill in. -->
+        <ul class="references">
+          <li>Bambu Lab. (n.d.-a). [Bambu Studio quick start guide]. Bambu Lab Wiki. Retrieved November 15, 2026, from <a href="https://wiki.bambulab.com/en/software/bambu-studio/studio-quick-start">https://wiki.bambulab.com/en/software/bambu-studio/studio-quick-start</a></li>
+          <li>Bambu Lab. (n.d.-b). <i>H2S</i>. Bambu Lab Wiki. Retrieved November 15, 2026, from <a href="https://wiki.bambulab.com/en/h2s">https://wiki.bambulab.com/en/h2s</a></li>
+          <li>Bambu Lab. (n.d.-c). <i>H2S AMS Combo &amp; Laser Full Combo unboxing</i>. Bambu Lab Wiki. Retrieved November 13, 2026, from <a href="https://wiki.bambulab.com/en/h2s/manual/unboxing-ams-combo-and-laser-full-combo">https://wiki.bambulab.com/en/h2s/manual/unboxing-ams-combo-and-laser-full-combo</a></li>
+          <li>Bambu Lab. (n.d.-d). [H2S frequently asked questions]. Bambu Lab Wiki. Retrieved November 15, 2026, from <a href="https://wiki.bambulab.com/en/h2/manual/h2s-faq">https://wiki.bambulab.com/en/h2/manual/h2s-faq</a></li>
+          <li>Bambu Lab. (n.d.-e). <i>H2S introduction</i>. Bambu Lab Wiki. Retrieved November 15, 2026, from <a href="https://wiki.bambulab.com/en/h2s/manual/h2s-intro">https://wiki.bambulab.com/en/h2s/manual/h2s-intro</a></li>
+          <li>Bambu Lab. (n.d.-f). <i>H2S periodic maintenance recommendations</i>. Bambu Lab Wiki. Retrieved November 15, 2026, from <a href="https://wiki.bambulab.com/en/h2s/maintenance/period-maintenance">https://wiki.bambulab.com/en/h2s/maintenance/period-maintenance</a></li>
+          <li>Bambu Lab. (n.d.-g). [H2S unboxing guide]. Bambu Lab Wiki. Retrieved November 13, 2026, from <a href="https://wiki.bambulab.com/en/h2s/manual/unboxing-h2s">https://wiki.bambulab.com/en/h2s/manual/unboxing-h2s</a></li>
+          <li>Bambu Lab. (2025). <i>Bambu Lab H2S specifications</i> [Spec sheet]. <a href="https://www.print3dd.com/wp-content/uploads/2025/08/h2s_specs.pdf.pdf">https://www.print3dd.com/wp-content/uploads/2025/08/h2s_specs.pdf.pdf</a></li>
+          <li>Bambu Lab Forum. (2023, November 21). <i>WiFi security protocols (WPA2-Ent 802.1X) needed</i> [Online forum thread]. <a href="https://forum.bambulab.com/t/wifi-security-protocols-wpa2-ent-802-1x-needed/36859">https://forum.bambulab.com/t/wifi-security-protocols-wpa2-ent-802-1x-needed/36859</a></li>
+          <li>Blair, K. (2026a). <i>CMNS 390: Documentation assignment sheet</i> [Assignment sheet]. University of the Fraser Valley.</li>
+          <li>Blair, K. (2026b). <i>CMNS 390 fall syllabus</i> [Course syllabus]. University of the Fraser Valley.</li>
+          <li>GitHub. (n.d.). <i>GitHub Pages limits</i>. GitHub Docs. Retrieved November 15, 2026, from <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits">https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits</a></li>
+          <li>Google. (n.d.). <i>Make your site more accessible</i>. Sites Help. Retrieved November 15, 2026, from <a href="https://support.google.com/sites/answer/7529116?hl=en">https://support.google.com/sites/answer/7529116?hl=en</a></li>
+          <li>Kirpichova, S. (2026, March 19). <i>UFV celebrates opening of new student housing and expanded dining hall</i>. UFV Today. <a href="https://blogs.ufv.ca/blog/2026/03/ufv-celebrates-opening-of-new-student-housing-and-expanded-dining-hall/">https://blogs.ufv.ca/blog/2026/03/ufv-celebrates-opening-of-new-student-housing-and-expanded-dining-hall/</a></li>
+          <li>McAdoo, T., Denneny, S., &amp; Lee, C. (2025, September 9). <i>Citing generative AI in APA Style: Part 1—Reference formats</i>. APA Style. <a href="https://apastyle.apa.org/blog/cite-generative-ai-references">https://apastyle.apa.org/blog/cite-generative-ai-references</a></li>
+          <li>Phrozen. (2024, January 26). <i>3D printing in dorm rooms: Balancing creativity and safety on campus</i>. <a href="https://phrozen3d.com/blogs/resin-3d-printing-latest-news/3d-printing-in-dorm-rooms-balancing-creativity-and-safety-on-campus">https://phrozen3d.com/blogs/resin-3d-printing-latest-news/3d-printing-in-dorm-rooms-balancing-creativity-and-safety-on-campus</a></li>
+          <li>University of the Fraser Valley. (n.d.-a). <i>Explore UFV housing</i>. Retrieved November 13, 2026, from <a href="https://www.ufv.ca/housing/explore-housing/">https://www.ufv.ca/housing/explore-housing/</a></li>
+          <li>University of the Fraser Valley. (n.d.-b). <i>Lá:lem te Baker</i>. Retrieved November 15, 2026, from <a href="https://www.ufv.ca/housing/explore-housing/baker/">https://www.ufv.ca/housing/explore-housing/baker/</a></li>
+          <li>University of the Fraser Valley. (n.d.-c). <i>Lá:léms Ye EverGreen</i>. Retrieved November 15, 2026, from <a href="https://www.ufv.ca/housing/explore-housing/evergreen/">https://www.ufv.ca/housing/explore-housing/evergreen/</a></li>
+          <li>University of the Fraser Valley. (n.d.-d). <i>Welcome to Lá:léms Ye EverGreen</i>. Retrieved November 13, 2026, from <a href="https://www.ufv.ca/housing/building-j/">https://www.ufv.ca/housing/building-j/</a></li>
+          <li>University of the Fraser Valley. (2026). <i>UFV student housing handbook 2026-27</i>. <a href="https://www.ufv.ca/media/assets/housing/contract--handbook-pdfs/UFV-Housing-and-Campus-Living-Handbook-2026-27_Final.pdf">https://www.ufv.ca/media/assets/housing/contract--handbook-pdfs/UFV-Housing-and-Campus-Living-Handbook-2026-27_Final.pdf</a></li>
+          <li>University of Wisconsin-Stevens Point. (n.d.). <i>How to connect to residence hall gaming and streaming Wi-Fi</i>. <a href="https://help.uwsp.edu/TDClient/66/Portal/KB/ArticleDet?ID=4767">https://help.uwsp.edu/TDClient/66/Portal/KB/ArticleDet?ID=4767</a></li>
+        </ul>
+
+        <h2 id="references--generative-ai-use">Generative AI use</h2>
+        <!-- Syllabus format: [Tool]. (YYYY/MM/DD of prompt). "Text of prompt". Generated using [Name of Tool]. Website of tool [how it was used].
+             Add an entry for the website build, the decorative headers and the printer explorer: see docs/ai-use-log.md. -->
+        <ul class="references">
+          <li>Claude. (2026/11/15). "Complete all in depth research with reputable sources, correct citations". Generated using Anthropic's Claude. <a href="https://claude.ai">https://claude.ai</a> [used to research and check sources for BE-1, BE-2, BE-3 and BE-5, to outline the Start Here and About pages, and to format this reference list]</li>
+        </ul>
+
+
+      
+</article>
+<article class="page" data-page="about-and-credits" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / Reference / About and Credits</p>
+
+<!-- Owner: Beckett. Target: about 200 words. -->
+      <figure class="layers">
+        <svg viewBox="0 0 720 108" role="img" aria-label="Decorative image: printed layers, 9 of 9 laid down">
+          <line class="grid-line" x1="12" y1="0" x2="12" y2="108"/>
+          <line class="grid-line" x1="48" y1="0" x2="48" y2="108"/>
+          <line class="grid-line" x1="84" y1="0" x2="84" y2="108"/>
+          <line class="grid-line" x1="120" y1="0" x2="120" y2="108"/>
+          <line class="grid-line" x1="156" y1="0" x2="156" y2="108"/>
+          <line class="grid-line" x1="192" y1="0" x2="192" y2="108"/>
+          <line class="grid-line" x1="228" y1="0" x2="228" y2="108"/>
+          <line class="grid-line" x1="264" y1="0" x2="264" y2="108"/>
+          <line class="grid-line" x1="300" y1="0" x2="300" y2="108"/>
+          <line class="grid-line" x1="336" y1="0" x2="336" y2="108"/>
+          <line class="grid-line" x1="372" y1="0" x2="372" y2="108"/>
+          <line class="grid-line" x1="408" y1="0" x2="408" y2="108"/>
+          <line class="grid-line" x1="444" y1="0" x2="444" y2="108"/>
+          <line class="grid-line" x1="480" y1="0" x2="480" y2="108"/>
+          <line class="grid-line" x1="516" y1="0" x2="516" y2="108"/>
+          <line class="grid-line" x1="552" y1="0" x2="552" y2="108"/>
+          <line class="grid-line" x1="588" y1="0" x2="588" y2="108"/>
+          <line class="grid-line" x1="624" y1="0" x2="624" y2="108"/>
+          <line class="grid-line" x1="660" y1="0" x2="660" y2="108"/>
+          <line class="grid-line" x1="696" y1="0" x2="696" y2="108"/>
+          <line class="grid-line" x1="0" y1="18" x2="720" y2="18"/>
+          <line class="grid-line" x1="0" y1="54" x2="720" y2="54"/>
+          <line class="grid-line" x1="0" y1="90" x2="720" y2="90"/>
+          <path class="layer layer-done" style="--i:0" pathLength="1" d="M22 97.0 H688"/>
+          <path class="layer layer-done" style="--i:1" pathLength="1" d="M32 86.5 H698"/>
+          <path class="layer layer-done" style="--i:2" pathLength="1" d="M22 76.0 H688"/>
+          <path class="layer layer-done" style="--i:3" pathLength="1" d="M32 65.5 H698"/>
+          <path class="layer layer-done" style="--i:4" pathLength="1" d="M22 55.0 H688"/>
+          <path class="layer layer-done" style="--i:5" pathLength="1" d="M32 44.5 H698"/>
+          <path class="layer layer-done" style="--i:6" pathLength="1" d="M22 34.0 H688"/>
+          <path class="layer layer-done" style="--i:7" pathLength="1" d="M32 23.5 H698"/>
+          <path class="layer layer-now" style="--i:8" pathLength="1" d="M22 13.0 H408"/>
+          <path class="nozzle" style="--i:8" d="M401 -4.0 h14 l-7 11 z"/>
+        </svg>
+        <figcaption>Decorative header. AI generated image.</figcaption>
+      </figure>
+      <h1>About and Credits</h1>
+      <p class="draft-note">Draft. Text carried over from the Master Draft; not yet revised.</p>
+      <nav class="toc" aria-labelledby="about-and-credits--toc-title">
+        <p class="toc-title" id="about-and-credits--toc-title">On this page</p>
+        <ol>
+            <li><a href="#about-and-credits--who-made-this">Who made this</a></li>
+            <li><a href="#about-and-credits--images">Images</a></li>
+            <li><a href="#about-and-credits--ai-use">AI use</a></li>
+            <li><a href="#about-and-credits--last-updated">Last updated</a></li>
+            <li><a href="#about-and-credits--not-an-official-document">Not an official document</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="about-and-credits--who-made-this">Who made this</h2>
+        <!-- Bennett's last name still to add. -->
+        <p>Printing in Residence was made by three students in CMNS 390 at the University of the Fraser Valley in Fall 2026, for instructor Kelsey Blair. Beckett Evans wrote Start Here, the Glossary and this page, and built the website. Jade Newton wrote Ask Housing First and Room Setup and Inspection. Bennett wrote the two Get Online pages and Connection Troubleshooting.</p>
+
+        <h2 id="about-and-credits--images">Images</h2>
+        <p>Every screenshot, photo and diagram on this site was made by us unless its caption says otherwise. The full list, with who owns each one, is below.</p>
+        <!-- Copy ownership, source and status from the Credits log in Visuals & Credits. -->
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Image credits">
+          <table>
+            <thead>
+              <tr><th scope="col">#</th><th scope="col">Visual</th><th scope="col">Page</th><th scope="col">Made by</th><th scope="col">Ownership</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>Building chooser graphic (H or J)</td><td>Start Here</td><td>Beckett</td><td>To be confirmed</td></tr>
+              <tr><td>2</td><td>Five-step overview diagram</td><td>Start Here</td><td>Beckett</td><td>To be confirmed</td></tr>
+              <tr><td>3</td><td>Decorative header images</td><td>Site-wide</td><td>Beckett</td><td>AI generated</td></tr>
+              <tr><td>4</td><td>Housing email template graphic</td><td>Ask Housing First</td><td>Jade</td><td>To be confirmed</td></tr>
+              <tr><td>5</td><td>Desk placement diagram (desk, clearance, window, outlet)</td><td>Room Setup and Inspection</td><td>Jade</td><td>To be confirmed</td></tr>
+              <tr><td>6</td><td>Filter location photo or diagram</td><td>Room Setup and Inspection</td><td>Jade</td><td>To be confirmed</td></tr>
+              <tr><td>7</td><td>Room inspection checklist graphic</td><td>Room Setup and Inspection</td><td>Jade</td><td>To be confirmed</td></tr>
+              <tr><td>8</td><td>Printer touchscreen network menu</td><td>Get Online in H and J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>9</td><td>MAC address screen</td><td>Get Online in J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>10</td><td>Gaming network registration portal</td><td>Get Online in J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>11</td><td>Bambu Handy binding, step 1</td><td>Get Online in H and J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>12</td><td>Bambu Handy binding, step 2</td><td>Get Online in H and J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>13</td><td>Bambu Handy binding, step 3</td><td>Get Online in H and J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+              <tr><td>14</td><td>Diagram: eduroam vs gaming network vs Bambu cloud</td><td>Get Online in J Building</td><td>Bennett</td><td>To be confirmed</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="about-and-credits--ai-use">AI use</h2>
+        <!-- The Master Draft wording covers research, outlining and the header images only.
+             It needs to also cover the website build and the printer explorer before this goes live as final:
+             see docs/ai-use-log.md for what was AI-made and when. -->
+        <p class="placeholder">To be written. See the AI use log in the repository for what to disclose.</p>
+
+        <h2 id="about-and-credits--last-updated">Last updated</h2>
+        <p class="placeholder">To be set on the final site lock.</p>
+
+        <h2 id="about-and-credits--not-an-official-document">Not an official document</h2>
+        <p>This guide is not from UFV Housing or Bambu Lab. If Housing tells you something different, follow Housing.</p>
+
+
+      
+</article>
+<article class="page" data-page="printer-explorer" hidden>
+<p class="breadcrumb"><a href="#start-here">Guide</a> / Extra / Printer explorer</p>
+
+      <h1>Printer explorer</h1>
+      <p class="draft-note">Extra page. Not one of the nine guide pages; remove this file and its menu link to leave it out.</p>
+
+        <h2 id="look-around-the-printer">Look around the printer</h2>
+        <p>Drag to turn the printer, pinch or scroll to zoom, and pick a part to see what it does. This is a simplified illustration, not to scale, and part positions are approximate. For the real thing, use Bambu Lab's <a href="https://wiki.bambulab.com/en/h2s/manual/h2s-intro">H2S introduction</a> (Bambu Lab, n.d.-e).</p>
+        <figure class="figure explorer" id="explorer">
+          <div class="explorer-stage">
+            <canvas id="explorer-canvas" aria-label="Simplified 3D illustration of the Bambu Lab H2S. The parts list below gives the same information." role="img"></canvas>
+            <p class="explorer-label" id="explorer-label" hidden></p>
+            <p class="explorer-fallback" id="explorer-fallback" hidden>The 3D view is not available on this device. The parts list below has the same information.</p>
+          </div>
+          <div class="explorer-controls">
+            <button type="button" class="explorer-button" id="explode-toggle" aria-pressed="false">Pull the parts apart</button>
+            <button type="button" class="explorer-button" id="reset-view">Reset the view</button>
+            <button type="button" class="explorer-button" id="part-prev">Previous part</button>
+            <button type="button" class="explorer-button" id="part-next">Next part</button>
+          </div>
+          <figcaption>Simplified illustration of the Bambu Lab H2S, not to scale. AI generated image.</figcaption>
+        </figure>
+
+        <h2 id="parts">Parts</h2>
+        <p id="part-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <ul class="part-list">
+            <li>
+              <button type="button" class="part-button" data-part="frame" aria-pressed="false">Frame and enclosure</button>
+              <p class="part-text" id="part-frame">The body of the printer. Everything else is mounted to it, and the door and cover close it in.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="top" aria-pressed="false">Top cover</button>
+              <p class="part-text" id="part-top">Closes the top of the enclosure. The printer detects when it is open.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="door" aria-pressed="false">Front door</button>
+              <p class="part-text" id="part-door">Closes the front of the enclosure. The printer detects when it is open.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="gantry" aria-pressed="false">CoreXY motion system</button>
+              <p class="part-text" id="part-gantry">Two motors and two belts move the tool head left, right, forward and back.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="toolhead" aria-pressed="false">Tool head</button>
+              <p class="part-text" id="part-toolhead">Carries the extruder, the hotend and its single nozzle, plus fans and sensors.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="bed" aria-pressed="false">Heatbed and build plate</button>
+              <p class="part-text" id="part-bed">The heated print surface. A textured build plate attaches to it with magnets and flexes to release prints.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="screws" aria-pressed="false">Z axis lead screws</button>
+              <p class="part-text" id="part-screws">Three lead screws raise and lower the heatbed evenly.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="screen" aria-pressed="false">Touchscreen</button>
+              <p class="part-text" id="part-screen">The 5-inch screen you use to control the printer. The Wi-Fi settings are found here.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="key" aria-pressed="false">Safety key</button>
+              <p class="part-text" id="part-key">Plugs into the back of the printer. It must be inserted for the printer to power on.</p>
+            </li>
+        </ul>
+
+
+      
+</article>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+    <ul class="footer-links" aria-label="Reference pages">
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#references">References</a></li>
+      <li><a href="#about-and-credits">About and Credits</a></li>
+    </ul>
+    <p>Not an official UFV or Bambu Lab document. Housing's written answer comes first.</p>
+    <p>Last updated: <!-- set on the final site lock -->draft</p>
+  </footer>
+</div>
+<div id="ws" hidden>
+
+<header class="top">
+  <div class="top-row">
+    <div><h1>Team workspace</h1><p class="ws-private">Private to the team. Visitors with view-only access cannot read these records.</p></div>
+    <div class="who">
+      <label for="me-select">I am</label>
+      <select id="me-select"><option value="">Choose…</option><option>Beckett</option><option>Jade</option><option>Bennett</option></select>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Workspace">
+    <a href="#team">Overview</a><a href="#team-mine">My work</a><a href="#team-tasks">Status board</a><a href="#team-research">Research</a><a href="#team-pages">Pages</a><a href="#team-visuals">Visuals</a><a href="#team-submissions">Submissions</a><a href="#team-questions">Open questions</a>
+  </nav>
+</header>
+<div id="ws-main" class="ws-main" aria-live="polite"><p class="soft">Loading the shared project records…</p></div>
+<dialog id="dlg" aria-labelledby="dlg-title"></dialog>
+<div id="toast" role="status"></div>
+
+
+</div>
+<script>window.__PAGES=[{"slug": "start-here", "title": "Start Here"}, {"slug": "ask-housing-first", "title": "Ask Housing First"}, {"slug": "get-online-h-building", "title": "Get Online in H Building"}, {"slug": "get-online-j-building", "title": "Get Online in J Building"}, {"slug": "connection-troubleshooting", "title": "Connection Troubleshooting"}, {"slug": "room-setup-and-inspection", "title": "Room Setup and Inspection"}, {"slug": "glossary", "title": "Glossary"}, {"slug": "references", "title": "References"}, {"slug": "about-and-credits", "title": "About and Credits"}, {"slug": "printer-explorer", "title": "Printer explorer"}];</script>
+<script>
+// Combined artifact shell: router, search, reading progress, menu, cinematic opening.
+(function () {
+  "use strict";
+  var PAGES = window.__PAGES; // [{slug, title}]
+  var slugs = PAGES.map(function (p) { return p.slug; });
+  var guide = document.getElementById("guide");
+  var ws = document.getElementById("ws");
+  var intro = document.getElementById("intro");
+  var header = document.querySelector(".site-header");
+  var switchLink = document.getElementById("view-switch");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var current = null;
+  var explorerLoaded = false;
+
+  function headerHeight() {
+    var h = header.offsetHeight;
+    document.documentElement.style.setProperty("--hh", h + "px");
+    return h;
+  }
+
+  // ---------- Router ----------
+  function parse() {
+    var h = decodeURIComponent(location.hash.slice(1));
+    if (h === "team" || h.indexOf("team-") === 0) return { view: "ws" };
+    if (slugs.indexOf(h) >= 0) return { view: "guide", page: h };
+    var cut = h.indexOf("--");
+    if (cut > 0 && slugs.indexOf(h.slice(0, cut)) >= 0) return { view: "guide", page: h.slice(0, cut), anchor: h };
+    if (h && document.getElementById(h)) {
+      var holder = document.getElementById(h).closest(".page");
+      if (holder) return { view: "guide", page: holder.dataset.page, anchor: h };
+    }
+    return { view: "guide", page: "start-here" };
+  }
+
+  function show() {
+    var r = parse();
+    var inWs = r.view === "ws";
+    guide.hidden = inWs;
+    ws.hidden = !inWs;
+    switchLink.textContent = inWs ? "Back to the guide" : "Team workspace";
+    switchLink.setAttribute("href", inWs ? "#start-here" : "#team");
+    if (inWs) { document.title = "Team workspace | Printing in Residence"; current = null; return; }
+    if (r.page !== current) {
+      current = r.page;
+      Array.prototype.forEach.call(document.querySelectorAll(".page"), function (el) { el.hidden = el.dataset.page !== current; });
+      intro.hidden = current !== "start-here";
+      Array.prototype.forEach.call(document.querySelectorAll("#site-nav a"), function (a) {
+        var on = a.getAttribute("href") === "#" + current;
+        if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+        if (a.parentElement) a.parentElement.classList.toggle("is-current", on);
+      });
+      var meta = PAGES[slugs.indexOf(current)];
+      document.title = meta.title + " | Printing in Residence";
+      setMenu(false);
+      if (current === "printer-explorer") loadExplorer();
+      if (current === "start-here") Intro.wake();
+      if (!r.anchor) window.scrollTo(0, 0);
+      watchSections();
+    }
+    if (r.anchor) {
+      var target = document.getElementById(r.anchor);
+      if (target) target.scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
+    }
+  }
+
+  function loadExplorer() {
+    if (explorerLoaded) { window.dispatchEvent(new Event("resize")); return; }
+    explorerLoaded = true;
+    var s = document.createElement("script");
+    s.src = "explorer.bundle.js";
+    s.onerror = function () {
+      var f = document.getElementById("explorer-fallback");
+      if (f) f.hidden = false;
+    };
+    document.body.appendChild(s);
+  }
+
+  // ---------- Menu (small screens) ----------
+  var menuButton = document.querySelector(".menu-button");
+  var nav = document.getElementById("site-nav");
+  function setMenu(open) {
+    if (!menuButton || !nav) return;
+    menuButton.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) nav.setAttribute("data-open", ""); else nav.removeAttribute("data-open");
+  }
+  if (menuButton) {
+    menuButton.hidden = false;
+    menuButton.addEventListener("click", function () { setMenu(menuButton.getAttribute("aria-expanded") !== "true"); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") setMenu(false); });
+  }
+
+  // ---------- Part navigation on the explorer page ----------
+  var partButtons = Array.prototype.slice.call(document.querySelectorAll(".part-button"));
+  function stepPart(dir) {
+    if (!partButtons.length) return;
+    var at = partButtons.findIndex(function (b) { return b.getAttribute("aria-pressed") === "true"; });
+    var next = partButtons[(at + dir + partButtons.length) % partButtons.length];
+    if (at < 0) next = partButtons[dir > 0 ? 0 : partButtons.length - 1];
+    next.click();
+  }
+  var prevPart = document.getElementById("part-prev"), nextPart = document.getElementById("part-next");
+  if (prevPart) prevPart.addEventListener("click", function () { stepPart(-1); });
+  if (nextPart) nextPart.addEventListener("click", function () { stepPart(1); });
+
+  // ---------- Search ----------
+  var index = [];
+  Array.prototype.forEach.call(document.querySelectorAll(".page"), function (page) {
+    var title = PAGES[slugs.indexOf(page.dataset.page)].title;
+    var heads = page.querySelectorAll("h2[id]");
+    Array.prototype.forEach.call(heads, function (h2) {
+      var text = "", n = h2.nextElementSibling;
+      while (n && n.tagName !== "H2") { if (!n.classList.contains("placeholder")) text += " " + n.textContent; n = n.nextElementSibling; }
+      index.push({ page: title, id: h2.id, heading: h2.textContent, body: text.replace(/\s+/g, " ").trim() });
+    });
+    Array.prototype.forEach.call(page.querySelectorAll("dt[id], .glossary-term[id]"), function (dt) {
+      index.push({ page: title, id: dt.id, heading: dt.textContent, body: dt.nextElementSibling ? dt.nextElementSibling.textContent : "" });
+    });
+  });
+  var box = document.getElementById("guide-search"), out = document.getElementById("search-results"), none = document.getElementById("search-none");
+  function search() {
+    var q = box.value.trim().toLowerCase();
+    out.textContent = ""; none.hidden = true;
+    if (q.length < 2) return;
+    var words = q.split(/\s+/);
+    var hits = index.map(function (e) {
+      var head = e.heading.toLowerCase(), hay = head + " " + e.body.toLowerCase(), score = 0;
+      for (var i = 0; i < words.length; i++) { if (hay.indexOf(words[i]) < 0) return null; score += head.indexOf(words[i]) >= 0 ? 3 : 1; }
+      return { e: e, score: score };
+    }).filter(Boolean).sort(function (a, b) { return b.score - a.score; }).slice(0, 8);
+    if (!hits.length) { none.hidden = false; return; }
+    hits.forEach(function (h) {
+      var li = document.createElement("li"), a = document.createElement("a"), w = document.createElement("span");
+      a.href = "#" + h.e.id; a.textContent = h.e.heading;
+      w.className = "where"; w.textContent = h.e.page;
+      li.appendChild(a); li.appendChild(w); out.appendChild(li);
+    });
+  }
+  if (box) box.addEventListener("input", search);
+
+  // ---------- Reading progress and current section ----------
+  var bar = document.querySelector(".read-progress span");
+  var sectionObserver = null;
+  function progress() {
+    if (guide.hidden || !current) return;
+    var page = document.querySelector('.page[data-page="' + current + '"]');
+    if (!page) return;
+    var rect = page.getBoundingClientRect();
+    var span = rect.height - window.innerHeight * 0.6;
+    var done = span > 0 ? Math.min(1, Math.max(0, (-rect.top + headerHeight()) / span)) : 1;
+    bar.style.width = Math.round(done * 100) + "%";
+  }
+  window.addEventListener("scroll", progress, { passive: true });
+  window.addEventListener("resize", function () { headerHeight(); progress(); });
+  function watchSections() {
+    if (sectionObserver) sectionObserver.disconnect();
+    if (!("IntersectionObserver" in window)) return;
+    var page = document.querySelector('.page[data-page="' + current + '"]');
+    var links = page.querySelectorAll(".toc a");
+    if (!links.length) return;
+    sectionObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Array.prototype.forEach.call(links, function (a) { a.classList.toggle("is-reading", a.getAttribute("href") === "#" + en.target.id); });
+      });
+    }, { rootMargin: "-20% 0px -65% 0px" });
+    Array.prototype.forEach.call(page.querySelectorAll("h2[id]"), function (h) { sectionObserver.observe(h); });
+    progress();
+  }
+
+  // ---------- Cinematic opening: a hand-projected drawing of the printer on a 2D canvas ----------
+  var Intro = (function () {
+    var canvas = intro.querySelector("canvas"), ctx = canvas.getContext && canvas.getContext("2d");
+    var track = intro.querySelector(".intro-track"), copy = intro.querySelector(".intro-copy");
+    var callout = document.getElementById("intro-callout"), stepEl = document.getElementById("intro-step");
+    var hint = intro.querySelector(".intro-hint"), actions = intro.querySelector(".intro-actions");
+    var names = {};
+    partButtons.forEach(function (b) { names[b.dataset.part] = b.textContent; });
+    var ORDER = ["frame", "top", "door", "gantry", "toolhead", "bed", "screws", "screen", "key"];
+    // Same schematic layout as the 3D explorer. One unit is 10 cm; overall about 49 x 51 x 63 cm.
+    var W = 4.9, D = 5.1, H = 6.3, boxes = [];
+    var OFF = { frame: [0, 0, 0], top: [0, 1.6, 0], door: [0, 0, 2.1], gantry: [0, 0.8, 0], toolhead: [0, 0.8, 1.4], bed: [0, -0.2, 1.5], screws: [0, 0, -1.5], screen: [0.8, 0.2, 2.6], key: [0, 0, -2] };
+    function B(part, w, h, d, x, y, z, tone, alpha) { boxes.push({ part: part, w: w, h: h, d: d, x: x, y: y, z: z, tone: tone, alpha: alpha || 1 }); }
+    B("frame", W, 0.9, D, 0, 0.45, 0, 0.42);
+    [-1, 1].forEach(function (sx) { [-1, 1].forEach(function (sz) { B("frame", 0.28, H - 0.9, 0.28, sx * (W / 2 - 0.14), 0.9 + (H - 0.9) / 2, sz * (D / 2 - 0.14), 0.42); }); });
+    B("frame", W, 0.22, 0.28, 0, H - 0.11, D / 2 - 0.14, 0.42); B("frame", W, 0.22, 0.28, 0, H - 0.11, -(D / 2 - 0.14), 0.42);
+    B("frame", 0.28, 0.22, D, W / 2 - 0.14, H - 0.11, 0, 0.42); B("frame", 0.28, 0.22, D, -(W / 2 - 0.14), H - 0.11, 0, 0.42);
+    B("frame", W - 0.3, H - 1.2, 0.08, 0, 0.9 + (H - 1.2) / 2, -(D / 2 - 0.05), 0.3, 0.45);
+    B("top", W - 0.1, 0.1, D - 0.1, 0, H + 0.06, 0, 0.85, 0.16);
+    B("door", W - 0.6, H - 1.3, 0.1, 0, 0.95 + (H - 1.3) / 2, D / 2 + 0.02, 0.85, 0.14);
+    B("gantry", 0.14, 0.14, D - 0.9, -(W / 2 - 0.45), 5.45, 0, 0.2); B("gantry", 0.14, 0.14, D - 0.9, W / 2 - 0.45, 5.45, 0, 0.2);
+    B("gantry", W - 0.9, 0.16, 0.16, 0, 5.45, 0.3, 0.2);
+    B("gantry", 0.42, 0.42, 0.42, -(W / 2 - 0.45), 5.3, -(D / 2 - 0.5), 0.2); B("gantry", 0.42, 0.42, 0.42, W / 2 - 0.45, 5.3, -(D / 2 - 0.5), 0.2);
+    B("toolhead", 0.62, 0.8, 0.52, 0.5, 5.2, 0.62, 0.16); B("toolhead", 0.22, 0.26, 0.22, 0.5, 4.72, 0.62, 0.8); B("toolhead", 0.1, 0.2, 0.1, 0.5, 4.5, 0.62, 0.8);
+    B("bed", 3.7, 0.14, 3.5, 0, 2.7, 0.05, 0.18); B("bed", 3.5, 0.05, 3.3, 0, 2.8, 0.05, 0.78);
+    [[-1.95, -1.5], [1.95, -1.5], [0, 1.95]].forEach(function (p) { B("screws", 0.1, 4.3, 0.1, p[0], 0.9 + 2.15, p[1] * 0.92, 0.8); });
+    B("screen", 1.15, 0.7, 0.08, 1.45, 5.75, D / 2 + 0.1, 0.12);
+    B("key", 0.3, 0.2, 0.22, -1.6, 1.3, -(D / 2 + 0.1), 0.9);
+
+    var FACES = [[0, 1, 3, 2], [5, 4, 6, 7], [4, 0, 2, 6], [1, 5, 7, 3], [2, 3, 7, 6], [4, 5, 1, 0]];
+    var LIGHT = (function () { var v = [-0.45, 0.75, -0.5], l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; })();
+    var started = 0, visible = true, running = false, staticMode = false, stageH = 0, lastKey = "";
+    function smooth(a, b, x) { var t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); }
+
+    function layout() {
+      var hh = headerHeight();
+      var vh = window.innerHeight;
+      staticMode = reduce.matches || vh > 1500 || !ctx; // a very tall frame means the page is not the scroller
+      stageH = Math.max(420, Math.min(staticMode ? 640 : vh - hh, 920));
+      intro.style.setProperty("--stage-h", stageH + "px");
+      intro.style.setProperty("--track-h", (staticMode ? stageH : Math.round(stageH * 3.6)) + "px");
+      intro.classList.toggle("is-static", staticMode);
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(canvas.clientWidth * dpr); canvas.height = Math.round(stageH * dpr);
+      lastKey = "";
+    }
+
+    function draw(yaw, light, explode, hi) {
+      var w = canvas.width, h = canvas.height, dpr = w / Math.max(1, canvas.clientWidth);
+      ctx.clearRect(0, 0, w, h);
+      var cx = w / 2, cy = h * 0.6, f = Math.min(w * 1.25, h * 1.5), dist = 25, pitch = 0.3;
+      var cyaw = Math.cos(yaw), syaw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      function cam(x, y, z) { // world to camera space
+        y -= 3.4;
+        var x1 = x * cyaw + z * syaw, z1 = -x * syaw + z * cyaw;
+        var y2 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+        return [x1, y2, z2 + dist];
+      }
+      function proj(v) { return [cx + f * v[0] / v[2], cy - f * v[1] / v[2]]; }
+      // Studio floor glow.
+      var floor = proj(cam(0, 0, 0)), rx = f * 5.2 / dist, g = ctx.createRadialGradient(floor[0], floor[1], 0, floor[0], floor[1], rx);
+      g.addColorStop(0, "rgba(127,208,162," + (0.16 * light) + ")"); g.addColorStop(1, "rgba(127,208,162,0)");
+      ctx.save(); ctx.translate(floor[0], floor[1]); ctx.scale(1, 0.3); ctx.translate(-floor[0], -floor[1]);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(floor[0], floor[1], rx, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+
+      var quads = [], anchor = [0, 0, 0], count = 0;
+      boxes.forEach(function (b) {
+        var o = OFF[b.part], ex = b.x + o[0] * explode, ey = b.y + o[1] * explode, ez = b.z + o[2] * explode, c = [];
+        for (var i = 0; i < 8; i++) c.push(cam(ex + (i & 1 ? 0.5 : -0.5) * b.w, ey + (i & 2 ? 0.5 : -0.5) * b.h, ez + (i & 4 ? 0.5 : -0.5) * b.d));
+        if (b.part === hi) { var m = cam(ex, ey, ez); anchor[0] += m[0]; anchor[1] += m[1]; anchor[2] += m[2]; count++; }
+        FACES.forEach(function (fc) {
+          var a = c[fc[0]], p = c[fc[1]], q = c[fc[3]];
+          var ux = p[0] - a[0], uy = p[1] - a[1], uz = p[2] - a[2], vx = q[0] - a[0], vy = q[1] - a[1], vz = q[2] - a[2];
+          var nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx, nl = Math.hypot(nx, ny, nz) || 1;
+          nx /= nl; ny /= nl; nz /= nl;
+          var mx = (a[0] + c[fc[2]][0]) / 2, my = (a[1] + c[fc[2]][1]) / 2, mz = (a[2] + c[fc[2]][2]) / 2;
+          if (nx * mx + ny * my + nz * mz > 0) { if (b.alpha === 1) return; nx = -nx; ny = -ny; nz = -nz; }
+          var lit = 0.22 + 0.78 * Math.max(0, nx * LIGHT[0] + ny * LIGHT[1] + nz * LIGHT[2]);
+          quads.push({ z: mz, pts: fc.map(function (k) { return proj(c[k]); }), lit: lit, b: b });
+        });
+      });
+      quads.sort(function (p, q) { return q.z - p.z; });
+      ctx.lineJoin = "round"; ctx.lineWidth = Math.max(1, dpr);
+      quads.forEach(function (qd) {
+        var b = qd.b, on = b.part === hi, v = (40 + 190 * b.tone) * qd.lit * light;
+        var r = v, gg = v * 1.02, bl = v * 1.05;
+        if (on) { r = r * 0.45 + 30 * light; gg = gg * 0.6 + 120 * qd.lit * light; bl = bl * 0.5 + 70 * qd.lit * light; }
+        if (b.part === "key" && !on) { r = 40 * qd.lit * light; gg = 150 * qd.lit * light; bl = 95 * qd.lit * light; }
+        ctx.beginPath(); ctx.moveTo(qd.pts[0][0], qd.pts[0][1]);
+        for (var i = 1; i < 4; i++) ctx.lineTo(qd.pts[i][0], qd.pts[i][1]);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(" + Math.round(r) + "," + Math.round(gg) + "," + Math.round(bl) + "," + (b.alpha === 1 ? 1 : b.alpha * (0.4 + 0.6 * light)) + ")";
+        ctx.fill();
+        ctx.strokeStyle = on ? "rgba(127,208,162,0.95)" : "rgba(230,236,232," + (0.1 + 0.2 * (1 - light) + (b.alpha < 1 ? 0.12 : 0)) + ")";
+        ctx.stroke();
+      });
+      if (hi && count) {
+        var pt = proj([anchor[0] / count, anchor[1] / count, anchor[2] / count]);
+        var cw = canvas.clientWidth, px = pt[0] / dpr, py = pt[1] / dpr;
+        callout.hidden = false; callout.textContent = names[hi] || "";
+        var half = callout.offsetWidth / 2 + 8, lx = Math.min(Math.max(px, half), cw - half), ly = Math.max(py - 64, 56);
+        callout.style.transform = "translate(" + Math.round(lx) + "px," + Math.round(ly) + "px) translate(-50%,-100%)";
+        ctx.strokeStyle = "rgba(127,208,162,0.9)"; ctx.lineWidth = 1.5 * dpr;
+        ctx.beginPath(); ctx.moveTo(pt[0], pt[1]); ctx.lineTo(lx * dpr, ly * dpr); ctx.stroke();
+        ctx.fillStyle = "#7fd0a2"; ctx.beginPath(); ctx.arc(pt[0], pt[1], 3.5 * dpr, 0, Math.PI * 2); ctx.fill();
+      } else { callout.hidden = true; }
+    }
+
+    function frame(now) {
+      running = false;
+      if (intro.hidden || guide.hidden || !ctx) return;
+      if (!started) started = now;
+      var p = 0;
+      if (!staticMode) {
+        var rect = track.getBoundingClientRect(), span = rect.height - stageH;
+        p = span > 0 ? Math.min(1, Math.max(0, (headerHeight() - rect.top) / span)) : 0;
+      }
+      var auto = staticMode ? 1 : smooth(300, 2600, now - started);
+      var light = 0.04 + 0.96 * auto;
+      var yaw = staticMode ? -0.62 : -0.62 + p * 4.6 + Math.sin((now - started) / 2600) * 0.05 * (1 - smooth(0, 0.08, p));
+      var explode = smooth(0.34, 0.52, p) * (1 - smooth(0.9, 0.99, p));
+      var hi = null, at = -1;
+      if (p > 0.4 && p < 0.9) { at = Math.min(ORDER.length - 1, Math.floor((p - 0.4) / 0.5 * ORDER.length)); hi = ORDER[at]; }
+      var key = [canvas.width, Math.round(yaw * 400), Math.round(light * 200), Math.round(explode * 300), hi].join("|");
+      if (key !== lastKey) {
+        lastKey = key;
+        draw(yaw, light, explode, hi);
+        copy.style.opacity = String(1 - smooth(0.06, 0.22, p));
+        hint.style.opacity = String(1 - smooth(0.02, 0.1, p));
+        stepEl.textContent = hi ? "Part " + (at + 1) + " of " + ORDER.length : "";
+      }
+      if (visible && !staticMode) request();
+    }
+    function request() { if (!running) { running = true; window.requestAnimationFrame(frame); } }
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) request(); }).observe(intro);
+    }
+    window.addEventListener("resize", function () { if (!intro.hidden) { layout(); request(); } });
+    window.addEventListener("scroll", request, { passive: true });
+    if (reduce.addEventListener) reduce.addEventListener("change", function () { layout(); request(); });
+
+    // Title letters rise one by one.
+    var title = intro.querySelector(".intro-title");
+    if (title && !reduce.matches) {
+      var text = title.textContent; title.setAttribute("aria-label", text); title.textContent = "";
+      text.split("").forEach(function (ch, i) { var s = document.createElement("span"); s.textContent = ch; s.style.setProperty("--i", i); s.setAttribute("aria-hidden", "true"); title.appendChild(s); });
+    }
+    document.getElementById("intro-skip").addEventListener("click", function () {
+      document.getElementById("guide-body").scrollIntoView({ behavior: reduce.matches ? "auto" : "smooth", block: "start" });
+      var h1 = document.querySelector('.page[data-page="start-here"] h1');
+      if (h1) { h1.setAttribute("tabindex", "-1"); h1.focus({ preventScroll: true }); }
+    });
+    return { wake: function () { layout(); request(); } };
+  })();
+
+  window.addEventListener("hashchange", show);
+  headerHeight();
+  show();
+})();
+
+</script>
+<script>
+(function(){
+
+"use strict";
+var SITE="https://beckettevans.github.io/Printing-In-Residence/";
+var REPO="https://github.com/BeckettEvans/Printing-In-Residence";
+var DOC="https://claude.ai/artifact/1VfzTeV71c6E5o8MFNZmPP";
+var PEOPLE=["Beckett","Jade","Bennett","Everyone"];
+var COLLS=["tasks","research","pages","visuals","milestones","questions","checklist","activity"];
+var S={},loaded={},db=null,user=null,uid=null,canWrite=true,me="",notice="Connecting to the shared data…";
+COLLS.forEach(function(c){S[c]=[];});
+var view={owner:"",mode:"board"};
+var OPT={
+  tasks:["Not started","In progress","Blocked","Done"],
+  visuals:["Not started","In progress","Done"],
+  research:["","In progress","Done"],
+  pages:["Not started","Outline in","Drafting","In review","Changes requested","Approved","On the site"],
+  questions:["Open","Answered"]
+};
+var FORMS={
+  tasks:[["title","Deliverable","text"],["owner","Owner","people"],["due","Due","date"],["dueText","Due, as written (optional)","text"],["status","Status","opt"],["notes","Notes","area"]],
+  research:[["question","Question","text"],["owner","Owner","people"],["feeds","Feeds page","text"],["status","Status","opt"],["notes","Notes","area"]],
+  pages:[["title","Page","text"],["owner","Owner","people"],["words","Word target","text"],["status","Stage","opt"],["reviewer","Reviewer","people"],["notes","Notes","area"]],
+  visuals:[["visual","Visual","text"],["page","Page","text"],["owner","Owner","people"],["ownership","Ownership","text"],["source","Source or link","text"],["caption","Caption","area"],["alt","Alt text","area"],["status","Status","opt"]],
+  milestones:[["milestone","Milestone","text"],["dueText","Due","text"],["by","Submitted by","text"],["submitted","Date submitted","text"],["filename","Filename","text"],["screenshot","Screenshot in chat","text"]],
+  questions:[["title","Question","text"],["owner","Owner","people"],["status","Status","opt"],["notes","Updates","area"]],
+  checklist:[["text","Item","area"],["group","Group","text"],["owner","Owner","people"]]
+};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function $(id){return document.getElementById(id);}
+function todayISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fmt(iso){if(!iso)return "";var p=iso.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);return d.toLocaleDateString("en-CA",{weekday:"short",month:"short",day:"numeric"});}
+function dueLabel(t){return t.dueText||fmt(t.due)||"No date";}
+function daysTo(iso){var p=iso.split("-"),q=todayISO().split("-");return Math.round((new Date(+p[0],+p[1]-1,+p[2])-new Date(+q[0],+q[1]-1,+q[2]))/864e5);}
+function isLate(t){return t.due&&t.status!=="Done"&&t.due<todayISO();}
+function chip(status){var s=status||"Not set";var c=(s==="Done"||s==="Answered"||s==="Approved"||s==="On the site")?"s-done":(s==="Blocked"||s==="Changes requested")?"s-block":(s==="Not started"||s==="Not set"||s==="Open")?"s-none":"s-prog";return '<span class="chip '+c+'">'+esc(s)+'</span>';}
+function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display="none";},3500);}
+function mineOf(list){return list.filter(function(x){return x.owner===me||x.owner==="Everyone";});}
+function bySort(a,b){return (a.n||0)-(b.n||0)||String(a.id).localeCompare(String(b.id));}
+function byDue(a,b){return String(a.due||"9999").localeCompare(String(b.due||"9999"))||bySort(a,b);}
+function pct(a,b){return b?Math.round(a/b*100):0;}
+function bar(a,b,label){return '<div><div class="rowline small"><span>'+esc(label)+'</span><span class="num">'+a+' of '+b+'</span></div><div class="bar" role="img" aria-label="'+esc(label)+': '+a+' of '+b+'"><span style="width:'+pct(a,b)+'%"></span></div></div>';}
+function sel(path,value,options,label){
+  return '<select aria-label="'+esc(label)+'" data-set="'+esc(path)+'"'+(canWrite?"":" disabled")+'>'+options.map(function(o){return '<option value="'+esc(o)+'"'+(o===(value||"")?" selected":"")+'>'+esc(o||"Not set")+'</option>';}).join("")+'</select>';
+}
+function editBtn(coll,x,label){return '<button class="link" data-edit="'+coll+'/'+esc(x.id)+'">'+esc(label)+'</button>';}
+
+/* ---------- data ---------- */
+function log(text){if(!db)return;db.collection("activity").add({t:Date.now(),who:me||"Someone",uid:uid||"",text:text}).catch(function(){});}
+function write(coll,id,patch,what){
+  if(!db){toast("Changes can't be saved here. Open the workspace on claude.ai while signed in.");return Promise.resolve(false);}
+  return db.doc(coll+"/"+id).update(patch).then(function(){if(what)log(what);return true;},function(e){
+    if(e&&e.code==="invalid_argument"){canWrite=false;toast("You have view-only access, so this was not saved. Ask Beckett for Contributor access.");render();}
+    else toast("That did not save. Check your connection and try again.");
+    return false;});
+}
+function subscribe(){
+  COLLS.forEach(function(c){
+    var q=db.collection(c);
+    if(c==="activity")q=q.orderBy("t","desc").limit(25);
+    q.onSnapshot(function(snap){
+      S[c]=snap.docs.map(function(d){var o=d.data()||{};var r={};for(var k in o)r[k]=o[k];r.id=d.id;return r;});
+      loaded[c]=true;if(!snap.metadata.fromCache){notice="";clearTimeout(subscribe.timer);}
+      schedule();
+    },function(){notice="The shared data stopped responding. Reload the page to reconnect.";schedule();});
+  });
+  subscribe.timer=setTimeout(function(){notice="The shared data can't be reached yet. Anything shown may be out of date.";schedule();},10000);
+}
+var pending=false;
+function schedule(){if(pending)return;pending=true;requestAnimationFrame(function(){pending=false;render();});}
+
+/* ---------- views ---------- */
+function route(){var h=location.hash.slice(1);if(h==="team")return "overview";if(h.indexOf("team-")!==0)return null;h=h.slice(5);return ["overview","mine","tasks","research","pages","visuals","submissions","questions"].indexOf(h)<0?"overview":h;}
+function render(){
+  var r=route();if(!r)return;
+  document.querySelectorAll("nav.tabs a").forEach(function(a){if(a.getAttribute("href")==="#"+(r==="overview"?"team":"team-"+r))a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+  var html=notice?'<p class="banner">'+esc(notice)+'</p>':"";
+  if(!canWrite)html+='<p class="banner">You have view-only access, so the team records are hidden. Ask Beckett for Contributor access.</p>';
+  html+=V[r]();
+  var m=$("ws-main"),y=window.scrollY;m.innerHTML=html;window.scrollTo(0,y);
+}
+function empty(c,word){return loaded[c]&&!S[c].length?'<p class="soft">No '+word+' recorded yet.</p>':"";}
+function taskRow(t){return '<li><span>'+editBtn("tasks",t,t.title)+'<br><span class="small soft">'+esc(t.owner||"No owner")+'</span></span><span class="small num" style="white-space:nowrap">'+(isLate(t)?'<span class="chip s-late">Overdue</span> ':"")+esc(dueLabel(t))+'</span></li>';}
+var V={};
+V.overview=function(){
+  var T=S.tasks,done=T.filter(function(t){return t.status==="Done";}).length;
+  var late=T.filter(isLate).sort(byDue),soon=T.filter(function(t){return t.status!=="Done"&&t.due&&!isLate(t)&&daysTo(t.due)<=7;}).sort(byDue);
+  var hard=S.milestones.filter(function(m){return m.due&&m.due>=todayISO()&&!m.submitted;}).sort(byDue)[0];
+  var R=S.research,V_=S.visuals,P=S.pages;
+  var h='<div class="grid">';
+  h+='<section class="panel"><h3>Status board</h3><p class="big num">'+done+' <span class="small soft">of '+T.length+' done</span></p>'+bar(done,T.length,"Deliverables done")+
+     '<p class="small soft">'+T.filter(function(t){return t.status==="In progress";}).length+' in progress, '+T.filter(function(t){return t.status==="Blocked";}).length+' blocked, '+late.length+' overdue. Counted from the board records.</p></section>';
+  h+='<section class="panel"><h3>Next submission</h3>'+(hard?'<p class="big num">'+daysTo(hard.due)+' <span class="small soft">days</span></p><p><strong>'+esc(hard.milestone)+'</strong></p><p class="small soft">'+esc(hard.dueText||fmt(hard.due))+' · '+esc(hard.by||"")+'</p>':'<p class="soft">No upcoming milestone recorded.</p>')+'</section>';
+  h+='<section class="panel"><h3>Readiness by kind of work</h3>'+
+     bar(R.filter(function(x){return x.status==="Done";}).length,R.length,"Research cards done")+
+     bar(P.filter(function(x){return ["In review","Changes requested","Approved","On the site"].indexOf(x.status)>=0;}).length,P.length,"Pages drafted and in review or later")+
+     bar(V_.filter(function(x){return x.status==="Done";}).length,V_.length,"Visuals done")+
+     bar(P.filter(function(x){return x.status==="Approved"||x.status==="On the site";}).length,P.length,"Pages approved")+
+     bar(P.filter(function(x){return x.status==="On the site";}).length,P.length,"Pages on the site")+'</section>';
+  h+='</div><div class="grid">';
+  h+='<section class="panel"><h3>Overdue</h3>'+(late.length?'<ul class="plain">'+late.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing is overdue.</p>')+'</section>';
+  h+='<section class="panel"><h3>Due in the next 7 days</h3>'+(soon.length?'<ul class="plain">'+soon.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing due this week.</p>')+'</section>';
+  h+='<section class="panel"><h3>By person</h3>'+["Beckett","Jade","Bennett","Everyone"].map(function(p){var mine=T.filter(function(t){return t.owner===p;});return bar(mine.filter(function(t){return t.status==="Done";}).length,mine.length,p);}).join("")+'</section>';
+  h+='</div><div class="grid">';
+  h+='<section class="panel"><h3>Recent activity</h3>'+(S.activity.length?'<ul class="plain">'+S.activity.slice(0,12).map(function(a){return '<li><span><strong>'+esc(a.who)+'</strong> '+esc(a.text)+'</span><span class="small soft num" style="white-space:nowrap">'+esc(new Date(a.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span></li>';}).join("")+'</ul>':'<p class="soft">No changes logged yet. Every status change made here is listed.</p>')+'</section>';
+  h+='<section class="panel"><h3>Where things live</h3><ul class="plain"><li><a href="'+DOC+'">Project doc (Master Draft, Research Notebook)</a></li><li><a href="'+SITE+'">Live guide on GitHub Pages</a></li><li><a href="'+REPO+'">Website repository</a></li></ul><p class="small soft">Writing happens in the Master Draft, as the charter says. This workspace tracks who owns what and where it stands.</p></section>';
+  return h+'</div>';
+};
+V.mine=function(){
+  if(!me)return '<section class="panel"><h2>My work</h2><p>Choose your name in the "I am" menu at the top to see your own list.</p></section>';
+  var T=mineOf(S.tasks).filter(function(t){return t.status!=="Done";}).sort(byDue),next=T[0];
+  var h='<section class="panel"><h2>'+esc(me)+', do this next</h2>'+(next?'<p style="font-size:1.1rem">'+editBtn("tasks",next,next.title)+'</p><p class="meta">'+(isLate(next)?'<span class="chip s-late">Overdue</span>':"")+'<span>'+esc(dueLabel(next))+'</span>'+chip(next.status)+'</p>':'<p class="soft">Nothing open is assigned to you.</p>')+'</section>';
+  h+='<div class="grid"><section class="panel"><h3>My open deliverables</h3>'+(T.length?'<ul class="plain">'+T.map(taskRow).join("")+'</ul>':'<p class="soft">None.</p>')+'</section>';
+  var D=mineOf(S.tasks).filter(function(t){return t.status==="Done";}).sort(bySort);
+  h+='<section class="panel"><h3>Done</h3>'+(D.length?'<ul class="plain">'+D.map(function(t){return '<li><span>'+esc(t.title)+'</span>'+chip("Done")+'</li>';}).join("")+'</ul>':'<p class="soft">Nothing marked done yet.</p>')+'</section>';
+  var P=S.pages.filter(function(p){return p.owner===me;}).sort(bySort),RV=S.pages.filter(function(p){return p.reviewer===me&&p.status==="In review";});
+  h+='<section class="panel"><h3>My pages</h3>'+(P.length?'<ul class="plain">'+P.map(function(p){return '<li><span>'+editBtn("pages",p,p.title)+'<br><span class="small soft">'+esc(p.words||"")+'</span></span>'+chip(p.status)+'</li>';}).join("")+'</ul>':'<p class="soft">None.</p>')+
+     '<h3>Waiting for my review</h3>'+(RV.length?'<ul class="plain">'+RV.map(function(p){return '<li><span>'+editBtn("pages",p,p.title)+'</span>'+chip(p.status)+'</li>';}).join("")+'</ul>':'<p class="soft">Nothing is waiting on you.</p>')+'</section></div>';
+  var R=S.research.filter(function(r){return r.owner===me;}).sort(bySort),Vs=S.visuals.filter(function(v){return v.owner===me;}).sort(bySort),C=S.checklist.filter(function(c){return c.owner===me;}).sort(bySort);
+  h+='<div class="grid"><section class="panel"><h3>My research cards</h3>'+bar(R.filter(function(r){return r.status==="Done";}).length,R.length,"Done")+'<ul class="plain">'+R.filter(function(r){return r.status!=="Done";}).map(function(r){return '<li><span><strong>'+esc(r.id)+'</strong> '+esc(r.question)+'</span>'+chip(r.status)+'</li>';}).join("")+'</ul></section>';
+  h+='<section class="panel"><h3>My visuals</h3>'+bar(Vs.filter(function(v){return v.status==="Done";}).length,Vs.length,"Done")+'<ul class="plain">'+Vs.map(function(v){return '<li><span>'+editBtn("visuals",v,v.visual)+'</span>'+chip(v.status)+'</li>';}).join("")+'</ul></section></div>';
+  h+='<section class="panel"><div class="rowline"><h3>My checklist</h3>'+(canWrite?'<button data-new="checklist">Add an item</button>':"")+'</div>'+(C.length?bar(C.filter(function(c){return c.done;}).length,C.length,"Ticked"):"");
+  var groups={};C.forEach(function(c){(groups[c.group||"Other"]=groups[c.group||"Other"]||[]).push(c);});
+  Object.keys(groups).forEach(function(g){h+='<h3 class="small soft">'+esc(g)+'</h3><ul class="plain">'+groups[g].map(function(c){return '<li><label style="display:flex;gap:.6rem;align-items:flex-start"><input type="checkbox" data-check="'+esc(c.id)+'"'+(c.done?" checked":"")+(canWrite?"":" disabled")+'><span>'+esc(c.text)+'</span></label><button class="link small" data-edit="checklist/'+esc(c.id)+'">Edit</button></li>';}).join("")+'</ul>';});
+  if(!C.length)h+='<p class="soft">No checklist items recorded for '+esc(me)+' yet. Add them from your own tab in the project doc.</p>';
+  return h+'</section>';
+};
+V.tasks=function(){
+  var T=S.tasks.filter(function(t){return !view.owner||t.owner===view.owner;});
+  var h='<div class="rowline"><h2>Status board</h2>'+(canWrite?'<button class="primary" data-new="tasks">Add a deliverable</button>':"")+'</div><div class="tools">'+
+    '<label class="f">Owner<select id="f-owner"><option value="">All</option>'+PEOPLE.map(function(p){return '<option'+(view.owner===p?" selected":"")+'>'+p+'</option>';}).join("")+'</select></label>'+
+    '<label class="f">View<select id="f-mode"><option value="board"'+(view.mode==="board"?" selected":"")+'>Board by status</option><option value="list"'+(view.mode==="list"?" selected":"")+'>List by due date</option><option value="num"'+(view.mode==="num"?" selected":"")+'>List in project order</option></select></label></div>'+empty("tasks","deliverables");
+  if(view.mode==="board"){
+    h+='<div class="kanban">'+OPT.tasks.map(function(st){var L=T.filter(function(t){return (t.status||"Not started")===st;}).sort(byDue);
+      return '<section class="col"><h3><span>'+st+'</span><span class="num soft">'+L.length+'</span></h3>'+L.map(function(t){return '<article class="card'+(isLate(t)?" late":"")+'">'+editBtn("tasks",t,(t.n?t.n+". ":"")+t.title)+'<div class="meta"><span class="chip">'+esc(t.owner||"No owner")+'</span><span class="num">'+esc(dueLabel(t))+'</span>'+(isLate(t)?'<span class="chip s-late">Overdue</span>':"")+'</div>'+sel("tasks/"+t.id+"/status",t.status||"Not started",OPT.tasks,"Status of "+t.title)+'</article>';}).join("")+'</section>';}).join("")+'</div>';
+  }else{
+    h+='<div class="tablewrap"><table><thead><tr><th>#</th><th>Deliverable</th><th>Owner</th><th>Due</th><th>Status</th><th>Notes</th></tr></thead><tbody>'+T.slice().sort(view.mode==="list"?byDue:bySort).map(function(t){return '<tr><td class="num">'+esc(t.n||"")+'</td><td>'+editBtn("tasks",t,t.title)+'</td><td>'+esc(t.owner)+'</td><td class="num" style="white-space:nowrap">'+esc(dueLabel(t))+(isLate(t)?' <span class="chip s-late">Overdue</span>':"")+'</td><td>'+sel("tasks/"+t.id+"/status",t.status||"Not started",OPT.tasks,"Status of "+t.title)+'</td><td class="note small">'+esc(t.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+  }
+  return h;
+};
+V.research=function(){
+  var R=S.research.slice().sort(bySort);
+  var h='<h2>Research tracker</h2><p class="soft">Answers and sources stay in the Research Notebook. Done means the card is filled in and the source is in APA 7.</p><div class="grid">'+["Beckett","Jade","Bennett"].map(function(p){var m=R.filter(function(r){return r.owner===p;});return '<section class="panel">'+bar(m.filter(function(r){return r.status==="Done";}).length,m.length,p)+'</section>';}).join("")+'</div>'+empty("research","research cards");
+  return h+'<div class="tablewrap"><table><thead><tr><th>ID</th><th>Question</th><th>Owner</th><th>Feeds page</th><th>Status</th><th>Notes</th></tr></thead><tbody>'+R.map(function(r){return '<tr><td><strong>'+esc(r.id)+'</strong></td><td>'+editBtn("research",r,r.question)+'</td><td>'+esc(r.owner)+'</td><td>'+esc(r.feeds)+'</td><td>'+sel("research/"+r.id+"/status",r.status||"",OPT.research,"Status of "+r.id)+'</td><td class="note small">'+esc(r.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.pages=function(){
+  var P=S.pages.slice().sort(bySort);
+  return '<h2>Pages</h2><p class="soft">One row per website page. Move a page along as it goes from outline to draft, relay review, approval and onto the site. Text is written in the Master Draft.</p>'+empty("pages","pages")+
+  '<div class="tablewrap"><table><thead><tr><th>Page</th><th>Owner</th><th>Target</th><th>Stage</th><th>Reviewer</th><th>Sections</th><th>Notes</th></tr></thead><tbody>'+P.map(function(p){return '<tr><td>'+editBtn("pages",p,p.title)+(p.file?'<br><a class="small" href="'+SITE+esc(p.file)+'">Open on the site</a>':"")+'</td><td>'+esc(p.owner)+'</td><td class="num">'+esc(p.words||"")+'</td><td>'+sel("pages/"+p.id+"/status",p.status||"Not started",OPT.pages,"Stage of "+p.title)+'</td><td>'+esc(p.reviewer||"")+'</td><td class="small">'+((p.sections||[]).length?'<details><summary>'+p.sections.length+' sections</summary><ol style="margin:.3rem 0;padding-left:1.2rem">'+p.sections.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ol></details>':"")+'</td><td class="note small">'+esc(p.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.visuals=function(){
+  var L=S.visuals.slice().sort(bySort);
+  return '<div class="rowline"><h2>Visuals and credits</h2>'+(canWrite?'<button data-new="visuals">Add a visual</button>':"")+'</div><p class="soft">Every visual needs a caption, alt text and an ownership: Ours, Public domain, Creative Commons, Fair dealing or AI generated. AI images are decorative only and must be cited.</p>'+empty("visuals","visuals")+
+  '<div class="tablewrap"><table><thead><tr><th>#</th><th>Visual</th><th>Page</th><th>Owner</th><th>Ownership</th><th>Caption</th><th>Alt text</th><th>Status</th></tr></thead><tbody>'+L.map(function(v){return '<tr><td class="num">'+esc(v.n||"")+'</td><td>'+editBtn("visuals",v,v.visual)+'</td><td>'+esc(v.page)+'</td><td>'+esc(v.owner)+'</td><td>'+esc(v.ownership||"")+'</td><td>'+(v.caption?chip("Done"):chip("Not set"))+'</td><td>'+(v.alt?chip("Done"):chip("Not set"))+'</td><td>'+sel("visuals/"+v.id+"/status",v.status||"Not started",OPT.visuals,"Status of "+v.visual)+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.submissions=function(){
+  var M=S.milestones.slice().sort(bySort);
+  return '<h2>Submission log</h2><p class="soft">Filename format: CMNS390_Milestone_v#_Initials, with FINAL at the end for final versions.</p>'+empty("milestones","milestones")+
+  '<div class="tablewrap"><table><thead><tr><th>Milestone</th><th>Due</th><th>Submitted by</th><th>Date submitted</th><th>Filename</th><th>Screenshot in chat</th></tr></thead><tbody>'+M.map(function(m){return '<tr><td>'+editBtn("milestones",m,m.milestone)+'</td><td class="num">'+esc(m.dueText||"")+'</td><td>'+esc(m.by||"")+'</td><td>'+esc(m.submitted||"")+'</td><td>'+esc(m.filename||"")+'</td><td>'+esc(m.screenshot||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.questions=function(){
+  var Q=S.questions.slice().sort(bySort);
+  return '<div class="rowline"><h2>Open questions and risks</h2>'+(canWrite?'<button data-new="questions">Add a question</button>':"")+'</div>'+empty("questions","questions")+Q.map(function(q){return '<section class="panel"><div class="rowline">'+editBtn("questions",q,(q.n?q.n+". ":"")+q.title)+sel("questions/"+q.id+"/status",q.status||"Open",OPT.questions,"Status of question")+'</div><p class="small soft">Owner: '+esc(q.owner||"Not set")+'</p>'+(q.notes?'<p class="small" style="white-space:pre-wrap">'+esc(q.notes)+'</p>':"")+'</section>';}).join("");
+};
+
+/* ---------- editor dialog ---------- */
+var editing=null;
+function openEditor(coll,id){
+  var item=id?S[coll].filter(function(x){return x.id===id;})[0]:{};
+  if(!item)return;
+  editing={coll:coll,id:id,item:item};
+  var h='<form method="dialog" id="ed"><h2 id="dlg-title">'+(id?"Edit":"Add")+'</h2>';
+  FORMS[coll].forEach(function(f){var k=f[0],v=item[k]==null?"":item[k],idn="ed-"+k,ro=canWrite?"":" disabled";
+    h+='<label class="f" for="'+idn+'">'+esc(f[1]);
+    if(f[2]==="area")h+='<textarea id="'+idn+'"'+ro+'>'+esc(v)+'</textarea>';
+    else if(f[2]==="opt")h+='<select id="'+idn+'"'+ro+'>'+OPT[coll].map(function(o){return '<option value="'+esc(o)+'"'+(o===v?" selected":"")+'>'+esc(o||"Not set")+'</option>';}).join("")+'</select>';
+    else if(f[2]==="people")h+='<select id="'+idn+'"'+ro+'><option value="">Not set</option>'+PEOPLE.map(function(o){return '<option'+(o===v?" selected":"")+'>'+o+'</option>';}).join("")+'</select>';
+    else h+='<input type="'+(f[2]==="date"?"date":"text")+'" id="'+idn+'" value="'+esc(v)+'"'+ro+'>';
+    h+='</label>';});
+  if(id&&coll!=="checklist"){
+    h+='<div class="comments"><h3>Comments</h3>'+((item.comments||[]).map(function(c){return '<div class="comment"><strong>'+esc(c.by)+'</strong> <span class="small soft">'+esc(new Date(c.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span><br>'+esc(c.text)+'</div>';}).join("")||'<p class="small soft">No comments yet.</p>')+
+       (canWrite?'<label class="f" for="ed-comment">Add a comment<textarea id="ed-comment" style="min-height:3rem"></textarea></label>':"")+'</div>';
+  }
+  h+='<div class="actions"><span>'+(id&&canWrite&&["tasks","checklist","questions","visuals"].indexOf(coll)>=0?'<button type="button" id="ed-del">Delete</button>':"")+'</span><span style="display:flex;gap:.5rem"><button type="button" id="ed-cancel">Close</button>'+(canWrite?'<button class="primary" type="submit">Save</button>':"")+'</span></div></form>';
+  var d=$("dlg");d.innerHTML=h;d.showModal();
+  $("ed-cancel").onclick=function(){d.close();};
+  var del=$("ed-del");if(del)del.onclick=function(){if(del.dataset.sure){db.doc(coll+"/"+id).delete().then(function(){log("deleted “"+(item.title||item.visual||item.text||id)+"”");d.close();},function(){toast("Delete did not go through.");});}else{del.dataset.sure="1";del.textContent="Click again to delete";}};
+  $("ed").onsubmit=function(ev){ev.preventDefault();saveEditor();};
+}
+function saveEditor(){
+  var e=editing,patch={},changed=[];
+  FORMS[e.coll].forEach(function(f){var v=$("ed-"+f[0]).value.trim();if(v!==(e.item[f[0]]==null?"":String(e.item[f[0]]))){patch[f[0]]=v;changed.push(f[1].toLowerCase());}});
+  var c=$("ed-comment"),ct=c?c.value.trim():"";
+  if(ct)patch.comments=(e.item.comments||[]).concat([{by:me||"Someone",t:Date.now(),text:ct}]);
+  var name=patch.title||patch.visual||patch.question||patch.milestone||e.item.title||e.item.visual||e.item.question||e.item.milestone||(patch.text||e.item.text||"").slice(0,60)||e.id;
+  if(!e.id){
+    if(!name){toast("Give it a name first.");return;}
+    patch.n=S[e.coll].reduce(function(m,x){return Math.max(m,x.n||0);},0)+1;
+    if(e.coll==="checklist"){patch.done=false;if(!patch.owner)patch.owner=me;}
+    if(!db){toast("Changes can't be saved here.");return;}
+    db.collection(e.coll).add(patch).then(function(){log("added “"+name+"”");$("dlg").close();},function(){toast("That did not save.");});
+    return;
+  }
+  if(!Object.keys(patch).length){$("dlg").close();return;}
+  var what=(patch.status!==undefined?"set “"+name+"” to "+(patch.status||"Not set"):ct&&!changed.length?"commented on “"+name+"”":"edited “"+name+"” ("+changed.join(", ")+")");
+  write(e.coll,e.id,patch,what).then(function(ok){if(ok)$("dlg").close();});
+}
+
+/* ---------- events ---------- */
+$("ws-main").addEventListener("click",function(ev){
+  var b=ev.target.closest("[data-edit]");if(b){var p=b.dataset.edit.split("/");openEditor(p[0],p.slice(1).join("/"));return;}
+  var n=ev.target.closest("[data-new]");if(n)openEditor(n.dataset.new,null);
+});
+$("ws-main").addEventListener("change",function(ev){
+  var t=ev.target;
+  if(t.id==="f-owner"){view.owner=t.value;render();return;}
+  if(t.id==="f-mode"){view.mode=t.value;render();return;}
+  if(t.dataset.check){var c=S.checklist.filter(function(x){return x.id===t.dataset.check;})[0];write("checklist",t.dataset.check,{done:t.checked},(t.checked?"ticked":"unticked")+" “"+(c?c.text.slice(0,60):"")+"”");return;}
+  if(t.dataset.set){var p=t.dataset.set.split("/"),item=S[p[0]].filter(function(x){return x.id===p[1];})[0],patch={};patch[p[2]]=t.value;
+    var nm=item?(item.title||item.visual||item.id):p[1];write(p[0],p[1],patch,"set “"+nm+"” to "+(t.value||"Not set"));}
+});
+window.addEventListener("hashchange",function(){if(route()){render();window.scrollTo(0,0);}});
+$("me-select").addEventListener("change",function(ev){me=ev.target.value;try{localStorage.setItem("pir-me",me);}catch(e){}
+  if(db&&uid)db.doc("members/"+uid).set({member:me}).catch(function(){});render();});
+try{me=localStorage.getItem("pir-me")||"";}catch(e){}
+$("me-select").value=me;
+render();
+
+(async function(){
+  var c=window.claude;
+  if(!c||!c.use){notice="Shared data is only available when this page is opened as an artifact on claude.ai.";render();return;}
+  var got=await Promise.all([c.use("db"),c.use("user")]);db=got[0];user=got[1];
+  if(!db){notice="The shared data isn't available in this view. Sign in to claude.ai and open the workspace again.";render();return;}
+  if(user){try{uid=await user.id();var w=await user.can("data.write");if(w===false)canWrite=false;}catch(e){}}
+  if(uid&&!me){try{var m=await db.doc("members/"+uid).get();if(m.exists){me=m.data().member||"";$("me-select").value=me;}}catch(e){}}
+  subscribe();render();
+})();
+
+})();
+</script>
+</body>
+</html>

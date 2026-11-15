@@ -38,3 +38,5 @@ The text on Start Here, the Glossary definitions, the References list and the Ab
 ## Later session, 2026/11/15
 
 Prompt: the "Master development prompt, Printing in Residence" file, followed by exports of the Task Assignments, Beckett, Research Notebook, Master Draft, Visuals & Credits, Submission Log and Site Map tabs, the proposal and the assignment sheet. Claude built the team workspace only. It did not write or change any guide text in this session.
+
+Same session, later: Claude assembled `artifact/index.html` with `tools/build_artifact.py`, `artifact/app.js` and `artifact/app.css`. It joins the existing nine pages, the printer explorer and the workspace into one Claude artifact, and adds an opening sequence (a decorative, simplified drawing of the printer, captioned "AI generated image"), search, a reading progress bar and previous and next part buttons. The guide text was copied from the existing pages unchanged.

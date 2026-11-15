@@ -61,6 +61,14 @@ npm install
 npm run build
 ```
 
+## Claude artifact
+
+`artifact/index.html` is the whole guide plus the team workspace as one page, published as a Claude artifact. It is generated, so do not edit it by hand:
+
+```
+python3 tools/build_artifact.py
+```
+
 ## Project records
 
 - `docs/project-spec.yaml`: site map, owners, deadlines, rules and the requirements traceability map, compiled from the team's project doc.

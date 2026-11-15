@@ -190,7 +190,7 @@ function render(){
   var r=route();
   document.querySelectorAll("nav.tabs a").forEach(function(a){if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
   var html=notice?'<p class="banner">'+esc(notice)+'</p>':"";
-  if(!canWrite)html+='<p class="banner">You have view-only access. You can read everything; changes need Contributor access from Beckett.</p>';
+  if(!canWrite)html+='<p class="banner">You have view-only access, so the team records are hidden. Ask Beckett for Contributor access.</p>';
   html+=V[r]();
   var m=$("main"),y=window.scrollY;m.innerHTML=html;window.scrollTo(0,y);
 }
