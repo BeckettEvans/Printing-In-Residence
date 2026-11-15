@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component reference | Printing in Residence</title>
+  <meta name="description" content="Copy-and-paste blocks for building pages. Not part of the guide.">
+  <meta name="robots" content="noindex">
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="assets/js/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-title" href="index.html">Printing in Residence</a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  </header>
+
+  <div class="layout">
+    <nav class="site-nav" id="site-nav" aria-label="Guide">
+      <p class="nav-heading" id="nav-steps-title">The five steps</p>
+      <ol class="nav-steps" aria-labelledby="nav-steps-title">
+        <li><a href="index.html">Start Here</a></li>
+        <li><a href="ask-housing-first.html">Ask Housing First</a></li>
+        <li>
+          <span class="nav-step-name">Get online in your building</span>
+          <ul class="nav-buildings">
+            <li><a href="get-online-h-building.html">H Building</a></li>
+            <li><a href="get-online-j-building.html">J Building</a></li>
+          </ul>
+        </li>
+        <li><a href="connection-troubleshooting.html">Connection Troubleshooting</a></li>
+        <li><a href="room-setup-and-inspection.html">Room Setup and Inspection</a></li>
+      </ol>
+      <p class="nav-heading" id="nav-ref-title">Reference</p>
+      <ul class="nav-reference" aria-labelledby="nav-ref-title">
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="references.html">References</a></li>
+        <li><a href="about-and-credits.html">About and Credits</a></li>
+        <li><a href="printer-explorer.html">Printer explorer</a></li>
+      </ul>
+    </nav>
+
+    <main class="layout-main" id="main">
+      <div class="content">
+      <h1>Component reference</h1>
+      <p class="draft-note">For the team only. Copy these blocks when moving drafts into the site. Not part of the guide.</p>
+      <nav class="toc" aria-labelledby="toc-title">
+        <p class="toc-title" id="toc-title">On this page</p>
+        <ol>
+            <li><a href="#numbered-steps">Numbered steps</a></li>
+            <li><a href="#note-and-warning">Note and warning</a></li>
+            <li><a href="#checklist">Checklist</a></li>
+            <li><a href="#figure-with-caption-and-alt-text">Figure with caption and alt text</a></li>
+            <li><a href="#table">Table</a></li>
+            <li><a href="#text-to-copy">Text to copy</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#glossary-link-and-inline-value">Glossary link and inline value</a></li>
+        </ol>
+      </nav>
+
+        <h2 id="numbered-steps">Numbered steps</h2>
+        <p>One action per step. Add the expected result after the action.</p>
+        <ol class="steps">
+          <li><p><strong>Action goes here.</strong> Explanation goes here.</p><p class="step-result">Expected result goes here.</p></li>
+          <li><p><strong>Action goes here.</strong> Explanation goes here.</p></li>
+        </ol>
+
+        <h2 id="note-and-warning">Note and warning</h2>
+        <div class="callout callout-note"><p class="callout-label">Note</p><p>Note text goes here.</p></div>
+        <div class="callout callout-warning"><p class="callout-label">Warning</p><p>Warning text goes here. Put it before the step it applies to.</p></div>
+
+        <h2 id="checklist">Checklist</h2>
+        <ul class="checklist"><li>Item goes here.</li><li>Item goes here.</li></ul>
+
+        <h2 id="figure-with-caption-and-alt-text">Figure with caption and alt text</h2>
+        <figure class="figure" id="visual-0">
+          <div class="figure-slot"><p>Image goes here</p></div>
+          <figcaption>Figure 0. Caption goes here.</figcaption>
+        </figure>
+
+        <h2 id="table">Table</h2>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Example table">
+          <table>
+            <thead><tr><th scope="col">Column</th><th scope="col">Column</th><th scope="col">Column</th></tr></thead>
+            <tbody><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr><tr><td>Cell</td><td>Cell</td><td>Cell</td></tr></tbody>
+          </table>
+        </div>
+
+        <h2 id="text-to-copy">Text to copy</h2>
+        <div class="copy-block">
+          <div class="copy-block-bar"><span>Email to Housing</span><button type="button" class="copy-button" data-copy-target="copy-example" hidden>Copy</button></div>
+          <pre id="copy-example">Subject: Subject goes here
+
+Email text goes here.</pre>
+        </div>
+
+        <h2 id="faq">FAQ</h2>
+        <details class="faq"><summary>Question goes here?</summary><p>Answer goes here.</p></details>
+        <details class="faq"><summary>Question goes here?</summary><p>Answer goes here.</p></details>
+
+        <h2 id="glossary-link-and-inline-value">Glossary link and inline value</h2>
+        <p>Link a term to the Glossary like this: <a href="glossary.html#eduroam">eduroam</a>. Show a value to type or read like this: <code>AA:BB:CC:DD:EE:FF</code>. Use <strong>bold</strong> for emphasis; do not underline.</p>
+
+
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <ul class="footer-links" aria-label="Reference pages">
+      <li><a href="glossary.html">Glossary</a></li>
+      <li><a href="references.html">References</a></li>
+      <li><a href="about-and-credits.html">About and Credits</a></li>
+    </ul>
+    <p>Not an official UFV or Bambu Lab document. Housing's written answer comes first.</p>
+
+    <p>Last updated: <!-- set on the final site lock -->draft</p>
+  </footer>
+</body>
+</html>
