@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Printing in Residence Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one quiet working surface. Tabs across the top, summary before detail,
+   state shown as a labelled chip so nothing depends on colour alone (team charter, section 5). */
+:root{
+  color-scheme:light;
+  --paper:#f3f3ef; --surface:#fbfbf8; --ink:#1b1f23; --ink-soft:#4a5157;
+  --rule:#c7cac4; --rule-strong:#7d848a; --accent:#14633c; --accent-tint:#dcebe1;
+  --warn:#8a4b00; --warn-tint:#f6e7cf; --bad:#9b1c1c; --bad-tint:#f6dddd; --idle-tint:#e6e7e2;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:4px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --paper:#15181b; --surface:#1d2125; --ink:#ecebe6; --ink-soft:#a9b0b4;
+    --rule:#353b40; --rule-strong:#7b838a; --accent:#7fd0a2; --accent-tint:#1f3a2b;
+    --warn:#f0b866; --warn-tint:#3b2c12; --bad:#f29a9a; --bad-tint:#3d1c1c; --idle-tint:#2a2f34;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --paper:#15181b; --surface:#1d2125; --ink:#ecebe6; --ink-soft:#a9b0b4;
+  --rule:#353b40; --rule-strong:#7b838a; --accent:#7fd0a2; --accent-tint:#1f3a2b;
+  --warn:#f0b866; --warn-tint:#3b2c12; --bad:#f29a9a; --bad-tint:#3d1c1c; --idle-tint:#2a2f34;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.5 var(--font)}
+a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:1.25rem;font-weight:700}
+h2{font-size:1.35rem;font-weight:700;margin-bottom:.25rem}
+h3{font-size:1rem;font-weight:600}
+p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+.soft{color:var(--ink-soft)}
+.small{font-size:.875rem}
+header.top{background:var(--surface);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:5}
+.top-row{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:center;justify-content:space-between;padding:.75rem 1rem;max-width:76rem;margin:0 auto}
+.who{display:flex;gap:.5rem;align-items:center;font-size:.875rem}
+nav.tabs{display:flex;gap:.25rem;overflow-x:auto;padding:0 1rem;max-width:76rem;margin:0 auto}
+nav.tabs a{padding:.5rem .75rem;white-space:nowrap;text-decoration:none;color:var(--ink-soft);border-bottom:3px solid transparent;font-weight:500}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+main{max-width:76rem;margin:0 auto;padding:1.25rem 1rem 4rem;display:flex;flex-direction:column;gap:1.25rem}
+.banner{background:var(--warn-tint);color:var(--ink);border-left:4px solid var(--warn);padding:.6rem .8rem;border-radius:var(--r)}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr))}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:1rem;display:flex;flex-direction:column;gap:.6rem;min-width:0}
+.big{font-size:2rem;font-weight:700;line-height:1}
+.bar{height:.6rem;background:var(--idle-tint);border-radius:1rem;overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--accent)}
+.rowline{display:flex;justify-content:space-between;gap:.75rem;align-items:baseline}
+ul.plain{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem}
+ul.plain li{display:flex;gap:.6rem;justify-content:space-between;align-items:baseline;border-top:1px solid var(--rule);padding-top:.5rem}
+ul.plain li:first-child{border-top:0;padding-top:0}
+.chip{display:inline-block;font-size:.78rem;font-weight:600;padding:.1rem .5rem;border-radius:1rem;border:1px solid var(--rule-strong);white-space:nowrap}
+.s-done{background:var(--accent-tint);border-color:var(--accent);color:var(--ink)}
+.s-prog{background:var(--warn-tint);border-color:var(--warn)}
+.s-block,.s-late{background:var(--bad-tint);border-color:var(--bad)}
+.s-none{background:var(--idle-tint)}
+.tools{display:flex;flex-wrap:wrap;gap:.5rem .75rem;align-items:end}
+label.f{display:flex;flex-direction:column;gap:.2rem;font-size:.8rem;font-weight:600;color:var(--ink-soft)}
+select,input,textarea,button{font:inherit;color:var(--ink)}
+select,input[type=text],input[type=date],textarea{background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--r);padding:.35rem .5rem;max-width:100%}
+textarea{width:100%;min-height:5rem;resize:vertical}
+button{background:var(--surface);border:1px solid var(--rule-strong);border-radius:var(--r);padding:.4rem .8rem;font-weight:600;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+button.link{border:0;background:none;padding:0;color:var(--ink);text-align:left;font-weight:600;text-decoration:underline;text-decoration-color:var(--rule-strong);text-underline-offset:3px}
+.kanban{display:grid;gap:.75rem;grid-template-columns:repeat(4,minmax(15rem,1fr));overflow-x:auto;padding-bottom:.5rem}
+.col{background:var(--idle-tint);border-radius:var(--r);padding:.6rem;display:flex;flex-direction:column;gap:.5rem;min-width:0}
+.col h3{display:flex;justify-content:space-between}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:var(--r);padding:.6rem;display:flex;flex-direction:column;gap:.4rem}
+.card.late{border-left:4px solid var(--bad)}
+.meta{display:flex;flex-wrap:wrap;gap:.35rem .6rem;align-items:center;font-size:.8rem;color:var(--ink-soft)}
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--rule);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:.5rem .65rem;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:.78rem;text-transform:none;color:var(--ink-soft);font-weight:600;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.note{max-width:28rem;color:var(--ink-soft)}
+dialog{border:1px solid var(--rule-strong);border-radius:var(--r);background:var(--surface);color:var(--ink);width:min(36rem,calc(100vw - 2rem));padding:1rem}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog form{display:flex;flex-direction:column;gap:.7rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.comments{display:flex;flex-direction:column;gap:.4rem;border-top:1px solid var(--rule);padding-top:.6rem}
+.comment{background:var(--paper);border-radius:var(--r);padding:.4rem .6rem;font-size:.9rem}
+.actions{display:flex;gap:.5rem;justify-content:space-between;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:1rem;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:.5rem .9rem;border-radius:var(--r);font-size:.9rem;display:none;max-width:calc(100vw - 2rem)}
+@media (max-width:40rem){.two{grid-template-columns:1fr}.kanban{grid-template-columns:repeat(4,82vw)}}
+@media (prefers-reduced-motion:no-preference){.bar>span{transition:width .3s}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <h1>Printing in Residence <span class="soft" style="font-weight:400">team workspace</span></h1>
+    <div class="who">
+      <label for="me-select">I am</label>
+      <select id="me-select"><option value="">Choose…</option><option>Beckett</option><option>Jade</option><option>Bennett</option></select>
+    </div>
+  </div>
+  <nav class="tabs" aria-label="Workspace">
+    <a href="#overview">Overview</a><a href="#mine">My work</a><a href="#tasks">Status board</a><a href="#research">Research</a><a href="#pages">Pages</a><a href="#visuals">Visuals</a><a href="#submissions">Submissions</a><a href="#questions">Open questions</a>
+  </nav>
+</header>
+<main id="main" aria-live="polite"><p class="soft">Loading the shared project records…</p></main>
+<dialog id="dlg" aria-labelledby="dlg-title"></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+"use strict";
+var SITE="https://beckettevans.github.io/Printing-In-Residence/";
+var REPO="https://github.com/BeckettEvans/Printing-In-Residence";
+var DOC="https://claude.ai/artifact/1VfzTeV71c6E5o8MFNZmPP";
+var PEOPLE=["Beckett","Jade","Bennett","Everyone"];
+var COLLS=["tasks","research","pages","visuals","milestones","questions","checklist","activity"];
+var S={},loaded={},db=null,user=null,uid=null,canWrite=true,me="",notice="Connecting to the shared data…";
+COLLS.forEach(function(c){S[c]=[];});
+var view={owner:"",mode:"board"};
+var OPT={
+  tasks:["Not started","In progress","Blocked","Done"],
+  visuals:["Not started","In progress","Done"],
+  research:["","In progress","Done"],
+  pages:["Not started","Outline in","Drafting","In review","Changes requested","Approved","On the site"],
+  questions:["Open","Answered"]
+};
+var FORMS={
+  tasks:[["title","Deliverable","text"],["owner","Owner","people"],["due","Due","date"],["dueText","Due, as written (optional)","text"],["status","Status","opt"],["notes","Notes","area"]],
+  research:[["question","Question","text"],["owner","Owner","people"],["feeds","Feeds page","text"],["status","Status","opt"],["notes","Notes","area"]],
+  pages:[["title","Page","text"],["owner","Owner","people"],["words","Word target","text"],["status","Stage","opt"],["reviewer","Reviewer","people"],["notes","Notes","area"]],
+  visuals:[["visual","Visual","text"],["page","Page","text"],["owner","Owner","people"],["ownership","Ownership","text"],["source","Source or link","text"],["caption","Caption","area"],["alt","Alt text","area"],["status","Status","opt"]],
+  milestones:[["milestone","Milestone","text"],["dueText","Due","text"],["by","Submitted by","text"],["submitted","Date submitted","text"],["filename","Filename","text"],["screenshot","Screenshot in chat","text"]],
+  questions:[["title","Question","text"],["owner","Owner","people"],["status","Status","opt"],["notes","Updates","area"]],
+  checklist:[["text","Item","area"],["group","Group","text"],["owner","Owner","people"]]
+};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function $(id){return document.getElementById(id);}
+function todayISO(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fmt(iso){if(!iso)return "";var p=iso.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);return d.toLocaleDateString("en-CA",{weekday:"short",month:"short",day:"numeric"});}
+function dueLabel(t){return t.dueText||fmt(t.due)||"No date";}
+function daysTo(iso){var p=iso.split("-"),q=todayISO().split("-");return Math.round((new Date(+p[0],+p[1]-1,+p[2])-new Date(+q[0],+q[1]-1,+q[2]))/864e5);}
+function isLate(t){return t.due&&t.status!=="Done"&&t.due<todayISO();}
+function chip(status){var s=status||"Not set";var c=(s==="Done"||s==="Answered"||s==="Approved"||s==="On the site")?"s-done":(s==="Blocked"||s==="Changes requested")?"s-block":(s==="Not started"||s==="Not set"||s==="Open")?"s-none":"s-prog";return '<span class="chip '+c+'">'+esc(s)+'</span>';}
+function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display="none";},3500);}
+function mineOf(list){return list.filter(function(x){return x.owner===me||x.owner==="Everyone";});}
+function bySort(a,b){return (a.n||0)-(b.n||0)||String(a.id).localeCompare(String(b.id));}
+function byDue(a,b){return String(a.due||"9999").localeCompare(String(b.due||"9999"))||bySort(a,b);}
+function pct(a,b){return b?Math.round(a/b*100):0;}
+function bar(a,b,label){return '<div><div class="rowline small"><span>'+esc(label)+'</span><span class="num">'+a+' of '+b+'</span></div><div class="bar" role="img" aria-label="'+esc(label)+': '+a+' of '+b+'"><span style="width:'+pct(a,b)+'%"></span></div></div>';}
+function sel(path,value,options,label){
+  return '<select aria-label="'+esc(label)+'" data-set="'+esc(path)+'"'+(canWrite?"":" disabled")+'>'+options.map(function(o){return '<option value="'+esc(o)+'"'+(o===(value||"")?" selected":"")+'>'+esc(o||"Not set")+'</option>';}).join("")+'</select>';
+}
+function editBtn(coll,x,label){return '<button class="link" data-edit="'+coll+'/'+esc(x.id)+'">'+esc(label)+'</button>';}
+
+/* ---------- data ---------- */
+function log(text){if(!db)return;db.collection("activity").add({t:Date.now(),who:me||"Someone",uid:uid||"",text:text}).catch(function(){});}
+function write(coll,id,patch,what){
+  if(!db){toast("Changes can't be saved here. Open the workspace on claude.ai while signed in.");return Promise.resolve(false);}
+  return db.doc(coll+"/"+id).update(patch).then(function(){if(what)log(what);return true;},function(e){
+    if(e&&e.code==="invalid_argument"){canWrite=false;toast("You have view-only access, so this was not saved. Ask Beckett for Contributor access.");render();}
+    else toast("That did not save. Check your connection and try again.");
+    return false;});
+}
+function subscribe(){
+  COLLS.forEach(function(c){
+    var q=db.collection(c);
+    if(c==="activity")q=q.orderBy("t","desc").limit(25);
+    q.onSnapshot(function(snap){
+      S[c]=snap.docs.map(function(d){var o=d.data()||{};var r={};for(var k in o)r[k]=o[k];r.id=d.id;return r;});
+      loaded[c]=true;if(!snap.metadata.fromCache){notice="";clearTimeout(subscribe.timer);}
+      schedule();
+    },function(){notice="The shared data stopped responding. Reload the page to reconnect.";schedule();});
+  });
+  subscribe.timer=setTimeout(function(){notice="The shared data can't be reached yet. Anything shown may be out of date.";schedule();},10000);
+}
+var pending=false;
+function schedule(){if(pending)return;pending=true;requestAnimationFrame(function(){pending=false;render();});}
+
+/* ---------- views ---------- */
+function route(){var h=(location.hash||"#overview").slice(1);return ["overview","mine","tasks","research","pages","visuals","submissions","questions"].indexOf(h)<0?"overview":h;}
+function render(){
+  var r=route();
+  document.querySelectorAll("nav.tabs a").forEach(function(a){if(a.getAttribute("href")==="#"+r)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");});
+  var html=notice?'<p class="banner">'+esc(notice)+'</p>':"";
+  if(!canWrite)html+='<p class="banner">You have view-only access. You can read everything; changes need Contributor access from Beckett.</p>';
+  html+=V[r]();
+  var m=$("main"),y=window.scrollY;m.innerHTML=html;window.scrollTo(0,y);
+}
+function empty(c,word){return loaded[c]&&!S[c].length?'<p class="soft">No '+word+' recorded yet.</p>':"";}
+function taskRow(t){return '<li><span>'+editBtn("tasks",t,t.title)+'<br><span class="small soft">'+esc(t.owner||"No owner")+'</span></span><span class="small num" style="white-space:nowrap">'+(isLate(t)?'<span class="chip s-late">Overdue</span> ':"")+esc(dueLabel(t))+'</span></li>';}
+var V={};
+V.overview=function(){
+  var T=S.tasks,done=T.filter(function(t){return t.status==="Done";}).length;
+  var late=T.filter(isLate).sort(byDue),soon=T.filter(function(t){return t.status!=="Done"&&t.due&&!isLate(t)&&daysTo(t.due)<=7;}).sort(byDue);
+  var hard=S.milestones.filter(function(m){return m.due&&m.due>=todayISO()&&!m.submitted;}).sort(byDue)[0];
+  var R=S.research,V_=S.visuals,P=S.pages;
+  var h='<div class="grid">';
+  h+='<section class="panel"><h3>Status board</h3><p class="big num">'+done+' <span class="small soft">of '+T.length+' done</span></p>'+bar(done,T.length,"Deliverables done")+
+     '<p class="small soft">'+T.filter(function(t){return t.status==="In progress";}).length+' in progress, '+T.filter(function(t){return t.status==="Blocked";}).length+' blocked, '+late.length+' overdue. Counted from the board records.</p></section>';
+  h+='<section class="panel"><h3>Next submission</h3>'+(hard?'<p class="big num">'+daysTo(hard.due)+' <span class="small soft">days</span></p><p><strong>'+esc(hard.milestone)+'</strong></p><p class="small soft">'+esc(hard.dueText||fmt(hard.due))+' · '+esc(hard.by||"")+'</p>':'<p class="soft">No upcoming milestone recorded.</p>')+'</section>';
+  h+='<section class="panel"><h3>Readiness by kind of work</h3>'+
+     bar(R.filter(function(x){return x.status==="Done";}).length,R.length,"Research cards done")+
+     bar(P.filter(function(x){return ["In review","Changes requested","Approved","On the site"].indexOf(x.status)>=0;}).length,P.length,"Pages drafted and in review or later")+
+     bar(V_.filter(function(x){return x.status==="Done";}).length,V_.length,"Visuals done")+
+     bar(P.filter(function(x){return x.status==="Approved"||x.status==="On the site";}).length,P.length,"Pages approved")+
+     bar(P.filter(function(x){return x.status==="On the site";}).length,P.length,"Pages on the site")+'</section>';
+  h+='</div><div class="grid">';
+  h+='<section class="panel"><h3>Overdue</h3>'+(late.length?'<ul class="plain">'+late.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing is overdue.</p>')+'</section>';
+  h+='<section class="panel"><h3>Due in the next 7 days</h3>'+(soon.length?'<ul class="plain">'+soon.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing due this week.</p>')+'</section>';
+  h+='<section class="panel"><h3>By person</h3>'+["Beckett","Jade","Bennett","Everyone"].map(function(p){var mine=T.filter(function(t){return t.owner===p;});return bar(mine.filter(function(t){return t.status==="Done";}).length,mine.length,p);}).join("")+'</section>';
+  h+='</div><div class="grid">';
+  h+='<section class="panel"><h3>Recent activity</h3>'+(S.activity.length?'<ul class="plain">'+S.activity.slice(0,12).map(function(a){return '<li><span><strong>'+esc(a.who)+'</strong> '+esc(a.text)+'</span><span class="small soft num" style="white-space:nowrap">'+esc(new Date(a.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span></li>';}).join("")+'</ul>':'<p class="soft">No changes logged yet. Every status change made here is listed.</p>')+'</section>';
+  h+='<section class="panel"><h3>Where things live</h3><ul class="plain"><li><a href="'+DOC+'">Project doc (Master Draft, Research Notebook)</a></li><li><a href="'+SITE+'">Live guide on GitHub Pages</a></li><li><a href="'+REPO+'">Website repository</a></li></ul><p class="small soft">Writing happens in the Master Draft, as the charter says. This workspace tracks who owns what and where it stands.</p></section>';
+  return h+'</div>';
+};
+V.mine=function(){
+  if(!me)return '<section class="panel"><h2>My work</h2><p>Choose your name in the "I am" menu at the top to see your own list.</p></section>';
+  var T=mineOf(S.tasks).filter(function(t){return t.status!=="Done";}).sort(byDue),next=T[0];
+  var h='<section class="panel"><h2>'+esc(me)+', do this next</h2>'+(next?'<p style="font-size:1.1rem">'+editBtn("tasks",next,next.title)+'</p><p class="meta">'+(isLate(next)?'<span class="chip s-late">Overdue</span>':"")+'<span>'+esc(dueLabel(next))+'</span>'+chip(next.status)+'</p>':'<p class="soft">Nothing open is assigned to you.</p>')+'</section>';
+  h+='<div class="grid"><section class="panel"><h3>My open deliverables</h3>'+(T.length?'<ul class="plain">'+T.map(taskRow).join("")+'</ul>':'<p class="soft">None.</p>')+'</section>';
+  var D=mineOf(S.tasks).filter(function(t){return t.status==="Done";}).sort(bySort);
+  h+='<section class="panel"><h3>Done</h3>'+(D.length?'<ul class="plain">'+D.map(function(t){return '<li><span>'+esc(t.title)+'</span>'+chip("Done")+'</li>';}).join("")+'</ul>':'<p class="soft">Nothing marked done yet.</p>')+'</section>';
+  var P=S.pages.filter(function(p){return p.owner===me;}).sort(bySort),RV=S.pages.filter(function(p){return p.reviewer===me&&p.status==="In review";});
+  h+='<section class="panel"><h3>My pages</h3>'+(P.length?'<ul class="plain">'+P.map(function(p){return '<li><span>'+editBtn("pages",p,p.title)+'<br><span class="small soft">'+esc(p.words||"")+'</span></span>'+chip(p.status)+'</li>';}).join("")+'</ul>':'<p class="soft">None.</p>')+
+     '<h3>Waiting for my review</h3>'+(RV.length?'<ul class="plain">'+RV.map(function(p){return '<li><span>'+editBtn("pages",p,p.title)+'</span>'+chip(p.status)+'</li>';}).join("")+'</ul>':'<p class="soft">Nothing is waiting on you.</p>')+'</section></div>';
+  var R=S.research.filter(function(r){return r.owner===me;}).sort(bySort),Vs=S.visuals.filter(function(v){return v.owner===me;}).sort(bySort),C=S.checklist.filter(function(c){return c.owner===me;}).sort(bySort);
+  h+='<div class="grid"><section class="panel"><h3>My research cards</h3>'+bar(R.filter(function(r){return r.status==="Done";}).length,R.length,"Done")+'<ul class="plain">'+R.filter(function(r){return r.status!=="Done";}).map(function(r){return '<li><span><strong>'+esc(r.id)+'</strong> '+esc(r.question)+'</span>'+chip(r.status)+'</li>';}).join("")+'</ul></section>';
+  h+='<section class="panel"><h3>My visuals</h3>'+bar(Vs.filter(function(v){return v.status==="Done";}).length,Vs.length,"Done")+'<ul class="plain">'+Vs.map(function(v){return '<li><span>'+editBtn("visuals",v,v.visual)+'</span>'+chip(v.status)+'</li>';}).join("")+'</ul></section></div>';
+  h+='<section class="panel"><div class="rowline"><h3>My checklist</h3>'+(canWrite?'<button data-new="checklist">Add an item</button>':"")+'</div>'+(C.length?bar(C.filter(function(c){return c.done;}).length,C.length,"Ticked"):"");
+  var groups={};C.forEach(function(c){(groups[c.group||"Other"]=groups[c.group||"Other"]||[]).push(c);});
+  Object.keys(groups).forEach(function(g){h+='<h3 class="small soft">'+esc(g)+'</h3><ul class="plain">'+groups[g].map(function(c){return '<li><label style="display:flex;gap:.6rem;align-items:flex-start"><input type="checkbox" data-check="'+esc(c.id)+'"'+(c.done?" checked":"")+(canWrite?"":" disabled")+'><span>'+esc(c.text)+'</span></label><button class="link small" data-edit="checklist/'+esc(c.id)+'">Edit</button></li>';}).join("")+'</ul>';});
+  if(!C.length)h+='<p class="soft">No checklist items recorded for '+esc(me)+' yet. Add them from your own tab in the project doc.</p>';
+  return h+'</section>';
+};
+V.tasks=function(){
+  var T=S.tasks.filter(function(t){return !view.owner||t.owner===view.owner;});
+  var h='<div class="rowline"><h2>Status board</h2>'+(canWrite?'<button class="primary" data-new="tasks">Add a deliverable</button>':"")+'</div><div class="tools">'+
+    '<label class="f">Owner<select id="f-owner"><option value="">All</option>'+PEOPLE.map(function(p){return '<option'+(view.owner===p?" selected":"")+'>'+p+'</option>';}).join("")+'</select></label>'+
+    '<label class="f">View<select id="f-mode"><option value="board"'+(view.mode==="board"?" selected":"")+'>Board by status</option><option value="list"'+(view.mode==="list"?" selected":"")+'>List by due date</option><option value="num"'+(view.mode==="num"?" selected":"")+'>List in project order</option></select></label></div>'+empty("tasks","deliverables");
+  if(view.mode==="board"){
+    h+='<div class="kanban">'+OPT.tasks.map(function(st){var L=T.filter(function(t){return (t.status||"Not started")===st;}).sort(byDue);
+      return '<section class="col"><h3><span>'+st+'</span><span class="num soft">'+L.length+'</span></h3>'+L.map(function(t){return '<article class="card'+(isLate(t)?" late":"")+'">'+editBtn("tasks",t,(t.n?t.n+". ":"")+t.title)+'<div class="meta"><span class="chip">'+esc(t.owner||"No owner")+'</span><span class="num">'+esc(dueLabel(t))+'</span>'+(isLate(t)?'<span class="chip s-late">Overdue</span>':"")+'</div>'+sel("tasks/"+t.id+"/status",t.status||"Not started",OPT.tasks,"Status of "+t.title)+'</article>';}).join("")+'</section>';}).join("")+'</div>';
+  }else{
+    h+='<div class="tablewrap"><table><thead><tr><th>#</th><th>Deliverable</th><th>Owner</th><th>Due</th><th>Status</th><th>Notes</th></tr></thead><tbody>'+T.slice().sort(view.mode==="list"?byDue:bySort).map(function(t){return '<tr><td class="num">'+esc(t.n||"")+'</td><td>'+editBtn("tasks",t,t.title)+'</td><td>'+esc(t.owner)+'</td><td class="num" style="white-space:nowrap">'+esc(dueLabel(t))+(isLate(t)?' <span class="chip s-late">Overdue</span>':"")+'</td><td>'+sel("tasks/"+t.id+"/status",t.status||"Not started",OPT.tasks,"Status of "+t.title)+'</td><td class="note small">'+esc(t.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+  }
+  return h;
+};
+V.research=function(){
+  var R=S.research.slice().sort(bySort);
+  var h='<h2>Research tracker</h2><p class="soft">Answers and sources stay in the Research Notebook. Done means the card is filled in and the source is in APA 7.</p><div class="grid">'+["Beckett","Jade","Bennett"].map(function(p){var m=R.filter(function(r){return r.owner===p;});return '<section class="panel">'+bar(m.filter(function(r){return r.status==="Done";}).length,m.length,p)+'</section>';}).join("")+'</div>'+empty("research","research cards");
+  return h+'<div class="tablewrap"><table><thead><tr><th>ID</th><th>Question</th><th>Owner</th><th>Feeds page</th><th>Status</th><th>Notes</th></tr></thead><tbody>'+R.map(function(r){return '<tr><td><strong>'+esc(r.id)+'</strong></td><td>'+editBtn("research",r,r.question)+'</td><td>'+esc(r.owner)+'</td><td>'+esc(r.feeds)+'</td><td>'+sel("research/"+r.id+"/status",r.status||"",OPT.research,"Status of "+r.id)+'</td><td class="note small">'+esc(r.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.pages=function(){
+  var P=S.pages.slice().sort(bySort);
+  return '<h2>Pages</h2><p class="soft">One row per website page. Move a page along as it goes from outline to draft, relay review, approval and onto the site. Text is written in the Master Draft.</p>'+empty("pages","pages")+
+  '<div class="tablewrap"><table><thead><tr><th>Page</th><th>Owner</th><th>Target</th><th>Stage</th><th>Reviewer</th><th>Sections</th><th>Notes</th></tr></thead><tbody>'+P.map(function(p){return '<tr><td>'+editBtn("pages",p,p.title)+(p.file?'<br><a class="small" href="'+SITE+esc(p.file)+'">Open on the site</a>':"")+'</td><td>'+esc(p.owner)+'</td><td class="num">'+esc(p.words||"")+'</td><td>'+sel("pages/"+p.id+"/status",p.status||"Not started",OPT.pages,"Stage of "+p.title)+'</td><td>'+esc(p.reviewer||"")+'</td><td class="small">'+((p.sections||[]).length?'<details><summary>'+p.sections.length+' sections</summary><ol style="margin:.3rem 0;padding-left:1.2rem">'+p.sections.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ol></details>':"")+'</td><td class="note small">'+esc(p.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.visuals=function(){
+  var L=S.visuals.slice().sort(bySort);
+  return '<div class="rowline"><h2>Visuals and credits</h2>'+(canWrite?'<button data-new="visuals">Add a visual</button>':"")+'</div><p class="soft">Every visual needs a caption, alt text and an ownership: Ours, Public domain, Creative Commons, Fair dealing or AI generated. AI images are decorative only and must be cited.</p>'+empty("visuals","visuals")+
+  '<div class="tablewrap"><table><thead><tr><th>#</th><th>Visual</th><th>Page</th><th>Owner</th><th>Ownership</th><th>Caption</th><th>Alt text</th><th>Status</th></tr></thead><tbody>'+L.map(function(v){return '<tr><td class="num">'+esc(v.n||"")+'</td><td>'+editBtn("visuals",v,v.visual)+'</td><td>'+esc(v.page)+'</td><td>'+esc(v.owner)+'</td><td>'+esc(v.ownership||"")+'</td><td>'+(v.caption?chip("Done"):chip("Not set"))+'</td><td>'+(v.alt?chip("Done"):chip("Not set"))+'</td><td>'+sel("visuals/"+v.id+"/status",v.status||"Not started",OPT.visuals,"Status of "+v.visual)+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.submissions=function(){
+  var M=S.milestones.slice().sort(bySort);
+  return '<h2>Submission log</h2><p class="soft">Filename format: CMNS390_Milestone_v#_Initials, with FINAL at the end for final versions.</p>'+empty("milestones","milestones")+
+  '<div class="tablewrap"><table><thead><tr><th>Milestone</th><th>Due</th><th>Submitted by</th><th>Date submitted</th><th>Filename</th><th>Screenshot in chat</th></tr></thead><tbody>'+M.map(function(m){return '<tr><td>'+editBtn("milestones",m,m.milestone)+'</td><td class="num">'+esc(m.dueText||"")+'</td><td>'+esc(m.by||"")+'</td><td>'+esc(m.submitted||"")+'</td><td>'+esc(m.filename||"")+'</td><td>'+esc(m.screenshot||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+};
+V.questions=function(){
+  var Q=S.questions.slice().sort(bySort);
+  return '<div class="rowline"><h2>Open questions and risks</h2>'+(canWrite?'<button data-new="questions">Add a question</button>':"")+'</div>'+empty("questions","questions")+Q.map(function(q){return '<section class="panel"><div class="rowline">'+editBtn("questions",q,(q.n?q.n+". ":"")+q.title)+sel("questions/"+q.id+"/status",q.status||"Open",OPT.questions,"Status of question")+'</div><p class="small soft">Owner: '+esc(q.owner||"Not set")+'</p>'+(q.notes?'<p class="small" style="white-space:pre-wrap">'+esc(q.notes)+'</p>':"")+'</section>';}).join("");
+};
+
+/* ---------- editor dialog ---------- */
+var editing=null;
+function openEditor(coll,id){
+  var item=id?S[coll].filter(function(x){return x.id===id;})[0]:{};
+  if(!item)return;
+  editing={coll:coll,id:id,item:item};
+  var h='<form method="dialog" id="ed"><h2 id="dlg-title">'+(id?"Edit":"Add")+'</h2>';
+  FORMS[coll].forEach(function(f){var k=f[0],v=item[k]==null?"":item[k],idn="ed-"+k,ro=canWrite?"":" disabled";
+    h+='<label class="f" for="'+idn+'">'+esc(f[1]);
+    if(f[2]==="area")h+='<textarea id="'+idn+'"'+ro+'>'+esc(v)+'</textarea>';
+    else if(f[2]==="opt")h+='<select id="'+idn+'"'+ro+'>'+OPT[coll].map(function(o){return '<option value="'+esc(o)+'"'+(o===v?" selected":"")+'>'+esc(o||"Not set")+'</option>';}).join("")+'</select>';
+    else if(f[2]==="people")h+='<select id="'+idn+'"'+ro+'><option value="">Not set</option>'+PEOPLE.map(function(o){return '<option'+(o===v?" selected":"")+'>'+o+'</option>';}).join("")+'</select>';
+    else h+='<input type="'+(f[2]==="date"?"date":"text")+'" id="'+idn+'" value="'+esc(v)+'"'+ro+'>';
+    h+='</label>';});
+  if(id&&coll!=="checklist"){
+    h+='<div class="comments"><h3>Comments</h3>'+((item.comments||[]).map(function(c){return '<div class="comment"><strong>'+esc(c.by)+'</strong> <span class="small soft">'+esc(new Date(c.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span><br>'+esc(c.text)+'</div>';}).join("")||'<p class="small soft">No comments yet.</p>')+
+       (canWrite?'<label class="f" for="ed-comment">Add a comment<textarea id="ed-comment" style="min-height:3rem"></textarea></label>':"")+'</div>';
+  }
+  h+='<div class="actions"><span>'+(id&&canWrite&&["tasks","checklist","questions","visuals"].indexOf(coll)>=0?'<button type="button" id="ed-del">Delete</button>':"")+'</span><span style="display:flex;gap:.5rem"><button type="button" id="ed-cancel">Close</button>'+(canWrite?'<button class="primary" type="submit">Save</button>':"")+'</span></div></form>';
+  var d=$("dlg");d.innerHTML=h;d.showModal();
+  $("ed-cancel").onclick=function(){d.close();};
+  var del=$("ed-del");if(del)del.onclick=function(){if(del.dataset.sure){db.doc(coll+"/"+id).delete().then(function(){log("deleted “"+(item.title||item.visual||item.text||id)+"”");d.close();},function(){toast("Delete did not go through.");});}else{del.dataset.sure="1";del.textContent="Click again to delete";}};
+  $("ed").onsubmit=function(ev){ev.preventDefault();saveEditor();};
+}
+function saveEditor(){
+  var e=editing,patch={},changed=[];
+  FORMS[e.coll].forEach(function(f){var v=$("ed-"+f[0]).value.trim();if(v!==(e.item[f[0]]==null?"":String(e.item[f[0]]))){patch[f[0]]=v;changed.push(f[1].toLowerCase());}});
+  var c=$("ed-comment"),ct=c?c.value.trim():"";
+  if(ct)patch.comments=(e.item.comments||[]).concat([{by:me||"Someone",t:Date.now(),text:ct}]);
+  var name=patch.title||patch.visual||patch.question||patch.milestone||e.item.title||e.item.visual||e.item.question||e.item.milestone||(patch.text||e.item.text||"").slice(0,60)||e.id;
+  if(!e.id){
+    if(!name){toast("Give it a name first.");return;}
+    patch.n=S[e.coll].reduce(function(m,x){return Math.max(m,x.n||0);},0)+1;
+    if(e.coll==="checklist"){patch.done=false;if(!patch.owner)patch.owner=me;}
+    if(!db){toast("Changes can't be saved here.");return;}
+    db.collection(e.coll).add(patch).then(function(){log("added “"+name+"”");$("dlg").close();},function(){toast("That did not save.");});
+    return;
+  }
+  if(!Object.keys(patch).length){$("dlg").close();return;}
+  var what=(patch.status!==undefined?"set “"+name+"” to "+(patch.status||"Not set"):ct&&!changed.length?"commented on “"+name+"”":"edited “"+name+"” ("+changed.join(", ")+")");
+  write(e.coll,e.id,patch,what).then(function(ok){if(ok)$("dlg").close();});
+}
+
+/* ---------- events ---------- */
+$("main").addEventListener("click",function(ev){
+  var b=ev.target.closest("[data-edit]");if(b){var p=b.dataset.edit.split("/");openEditor(p[0],p.slice(1).join("/"));return;}
+  var n=ev.target.closest("[data-new]");if(n)openEditor(n.dataset.new,null);
+});
+$("main").addEventListener("change",function(ev){
+  var t=ev.target;
+  if(t.id==="f-owner"){view.owner=t.value;render();return;}
+  if(t.id==="f-mode"){view.mode=t.value;render();return;}
+  if(t.dataset.check){var c=S.checklist.filter(function(x){return x.id===t.dataset.check;})[0];write("checklist",t.dataset.check,{done:t.checked},(t.checked?"ticked":"unticked")+" “"+(c?c.text.slice(0,60):"")+"”");return;}
+  if(t.dataset.set){var p=t.dataset.set.split("/"),item=S[p[0]].filter(function(x){return x.id===p[1];})[0],patch={};patch[p[2]]=t.value;
+    var nm=item?(item.title||item.visual||item.id):p[1];write(p[0],p[1],patch,"set “"+nm+"” to "+(t.value||"Not set"));}
+});
+window.addEventListener("hashchange",function(){render();window.scrollTo(0,0);});
+$("me-select").addEventListener("change",function(ev){me=ev.target.value;try{localStorage.setItem("pir-me",me);}catch(e){}
+  if(db&&uid)db.doc("members/"+uid).set({member:me}).catch(function(){});render();});
+try{me=localStorage.getItem("pir-me")||"";}catch(e){}
+$("me-select").value=me;
+render();
+
+(async function(){
+  var c=window.claude;
+  if(!c||!c.use){notice="Shared data is only available when this page is opened as an artifact on claude.ai.";render();return;}
+  var got=await Promise.all([c.use("db"),c.use("user")]);db=got[0];user=got[1];
+  if(!db){notice="The shared data isn't available in this view. Sign in to claude.ai and open the workspace again.";render();return;}
+  if(user){try{uid=await user.id();var w=await user.can("data.write");if(w===false)canWrite=false;}catch(e){}}
+  if(uid&&!me){try{var m=await db.doc("members/"+uid).get();if(m.exists){me=m.data().member||"";$("me-select").value=me;}}catch(e){}}
+  subscribe();render();
+})();
+</script>
+</body>
+</html>

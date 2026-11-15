@@ -23,6 +23,7 @@ Not part of the guide:
 - `template.html` has copy-and-paste blocks (steps, warnings, figures, tables, FAQ) for moving drafts in.
 - `printer-explorer.html` is an optional 3D illustration. To leave it out, delete the file and remove its line from the menu in each page.
 - `404.html` is the "page not found" page.
+- `workspace/index.html` is a backup of the team's private workspace, which runs as a Claude artifact. It holds no project data and does nothing when opened from this site.
 
 ## Moving a draft into a page
 
