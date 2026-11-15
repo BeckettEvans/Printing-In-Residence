@@ -52,18 +52,13 @@ In the repository on GitHub: Settings, Pages, "Deploy from a branch", branch `ma
 
 These follow the team charter: one typeface (IBM Plex Sans), one heading hierarchy, bold for emphasis, one primary colour (graphite) and one accent (green), and every colour pair passes WCAG AA contrast so the pages read in black and white. Links keep an underline so they can be found without colour. Printing a page gives a clean export with the project title in the header and the page number in the footer.
 
-## Printer explorer bundle
+## Printer model
 
-Only needed if `src/explorer.js` changes:
-
-```
-npm install
-npm run build
-```
+`src/printer3d.src.js` builds the 3D printer used by the opening sequence and the printer explorer. `python3 tools/build_artifact.py` joins it with the three.js helpers in `assets/js/vendor/` and writes `assets/js/printer3d.js`. There is nothing to install.
 
 ## Claude artifact
 
-`artifact/index.html` is the whole guide plus the team workspace as one page, published as a Claude artifact. It is generated, so do not edit it by hand:
+`artifact/index.html` is the whole guide plus the team workspace as one page, published as a Claude artifact. In the artifact, teammates write each section in the workspace, a teammate approves it, and publishing shows it in the guide straight away. That published text lives in the artifact, not in these HTML files, so copy it across before a GitHub Pages submission. It is generated, so do not edit it by hand:
 
 ```
 python3 tools/build_artifact.py
@@ -76,4 +71,4 @@ python3 tools/build_artifact.py
 
 ## Licences
 
-IBM Plex Sans is under the SIL Open Font License (`assets/fonts/OFL.txt`). The explorer bundle includes three.js (MIT License).
+IBM Plex Sans is under the SIL Open Font License (`assets/fonts/OFL.txt`). three.js r128 and its helper files in `assets/js/vendor/` are under the MIT License (`assets/js/vendor/THREE-LICENSE.txt`).

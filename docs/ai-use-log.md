@@ -40,3 +40,9 @@ The text on Start Here, the Glossary definitions, the References list and the Ab
 Prompt: the "Master development prompt, Printing in Residence" file, followed by exports of the Task Assignments, Beckett, Research Notebook, Master Draft, Visuals & Credits, Submission Log and Site Map tabs, the proposal and the assignment sheet. Claude built the team workspace only. It did not write or change any guide text in this session.
 
 Same session, later: Claude assembled `artifact/index.html` with `tools/build_artifact.py`, `artifact/app.js` and `artifact/app.css`. It joins the existing nine pages, the printer explorer and the workspace into one Claude artifact, and adds an opening sequence (a decorative, simplified drawing of the printer, captioned "AI generated image"), search, a reading progress bar and previous and next part buttons. The guide text was copied from the existing pages unchanged.
+
+Same session, later still. Prompt: "Create using remotion and other design skill and bambu reference material for the actual h2s printer a real 3D explosion thats ultra realistic (find a 3D model of the printer maybe) and replace it with te one you have. Make sure the site contains all the sections the site will need from all people and contains all content sections for what our assignment reuqires and make sure the team workspace properly connects, easy to understand and read tracking what each persons tasks are what they need to do and when submitted through update the site."
+
+- Claude replaced the printer model with `src/printer3d.src.js`, a hand-built reconstruction from the printer's published outer size and the nine parts already named on the explorer page. No Bambu Lab CAD file and no third-party model was used. Remotion was not used.
+- Claude added an empty FAQ heading to Start Here, because the Site Map says every page ends with one.
+- Claude added section writing, review and publishing to the workspace. It wrote none of the section text.

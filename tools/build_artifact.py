@@ -198,6 +198,8 @@ def build():
 <div id="ws" hidden>
 %s
 </div>
+<script src="three.min.js"></script>
+<script src="printer3d.js"></script>
 <script>window.__PAGES=%s;</script>
 <script>
 %s
@@ -213,7 +215,11 @@ def build():
        header, intro, nav, "\n".join(articles), footer, ws_body, page_meta, read("artifact/app.js"), ws_js)
     out = ROOT / "artifact" / "index.html"
     out.write_text(html, encoding="utf-8")
-    (ROOT / "artifact" / "explorer.bundle.js").write_bytes((ROOT / "assets/js/explorer.bundle.js").read_bytes())
+    vendor = ROOT / "assets/js/vendor"
+    module = "\n".join(read("assets/js/vendor/" + n) for n in ("OrbitControls.js", "RoomEnvironment.js", "RoundedBoxGeometry.js")) + "\n" + read("src/printer3d.src.js")
+    (ROOT / "assets/js/printer3d.js").write_text(module, encoding="utf-8")
+    (ROOT / "artifact" / "printer3d.js").write_text(module, encoding="utf-8")
+    (ROOT / "artifact" / "three.min.js").write_bytes((vendor / "three.min.js").read_bytes())
     print("wrote", out, len(html), "bytes")
 
 

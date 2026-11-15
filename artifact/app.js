@@ -66,13 +66,8 @@
   function loadExplorer() {
     if (explorerLoaded) { window.dispatchEvent(new Event("resize")); return; }
     explorerLoaded = true;
-    var s = document.createElement("script");
-    s.src = "explorer.bundle.js";
-    s.onerror = function () {
-      var f = document.getElementById("explorer-fallback");
-      if (f) f.hidden = false;
-    };
-    document.body.appendChild(s);
+    var ok = window.PIRPrinter && window.PIRPrinter.mountExplorer();
+    if (!ok) { var f = document.getElementById("explorer-fallback"); if (f) f.hidden = false; }
   }
 
   // ---------- Menu (small screens) ----------
@@ -104,6 +99,8 @@
 
   // ---------- Search ----------
   var index = [];
+  function buildIndex() {
+  index = [];
   Array.prototype.forEach.call(document.querySelectorAll(".page"), function (page) {
     var title = PAGES[slugs.indexOf(page.dataset.page)].title;
     var heads = page.querySelectorAll("h2[id]");
@@ -116,6 +113,73 @@
       index.push({ page: title, id: dt.id, heading: dt.textContent, body: dt.nextElementSibling ? dt.nextElementSibling.textContent : "" });
     });
   });
+  }
+  buildIndex();
+
+  // ---------- Sections registry for the workspace ----------
+  window.__GUIDE = PAGES.slice(0, 9).map(function (p) {
+    var page = document.querySelector('.page[data-page="' + p.slug + '"]');
+    return { slug: p.slug, title: p.title, sections: Array.prototype.map.call(page.querySelectorAll("h2[id]"), function (h) { return { id: h.id, heading: h.textContent }; }) };
+  });
+
+  // ---------- Text published from the workspace ----------
+  function escHtml(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function inline(s) {
+    return escHtml(s).replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:|#)[^\s)]+)\)/g, '<a href="$2">$1</a>');
+  }
+  function md(text) {
+    var lines = String(text || "").replace(/\r/g, "").split("\n"), out = [], para = [], list = null, table = null;
+    function flush() {
+      if (para.length) { out.push("<p>" + inline(para.join(" ")) + "</p>"); para = []; }
+      if (list) { out.push("<" + list.tag + ">" + list.items.map(function (i) { return "<li>" + inline(i) + "</li>"; }).join("") + "</" + list.tag + ">"); list = null; }
+      if (table) {
+        var head = table[0], body = table.slice(1).filter(function (r) { return !/^[\s:|-]+$/.test(r.join("|")); });
+        out.push('<div class="table-wrap"><table><thead><tr>' + head.map(function (c) { return '<th scope="col">' + inline(c) + "</th>"; }).join("") + "</tr></thead><tbody>" +
+          body.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + inline(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</tbody></table></div>");
+        table = null;
+      }
+    }
+    lines.forEach(function (raw) {
+      var line = raw.trim(), m;
+      if (!line) { flush(); return; }
+      if (line.charAt(0) === "|") { if (para.length || list) flush(); (table = table || []).push(line.replace(/^\||\|$/g, "").split("|").map(function (c) { return c.trim(); })); return; }
+      if ((m = /^[-*]\s+(.*)/.exec(line))) { if (para.length || table || (list && list.tag !== "ul")) flush(); (list = list || { tag: "ul", items: [] }).items.push(m[1]); return; }
+      if ((m = /^\d+[.)]\s+(.*)/.exec(line))) { if (para.length || table || (list && list.tag !== "ol")) flush(); (list = list || { tag: "ol", items: [] }).items.push(m[1]); return; }
+      if ((m = /^###\s+(.*)/.exec(line))) { flush(); out.push("<h3>" + inline(m[1]) + "</h3>"); return; }
+      if (list || table) flush();
+      para.push(line);
+    });
+    flush();
+    return out.join("\n");
+  }
+  window.__md = md;
+  function keepWithSection(el) { return el.tagName === "FIGURE" || /visual-\d+/.test(el.id || "") || el.classList.contains("live-text"); }
+  function applyLive(map) {
+    window.__GUIDE.forEach(function (g) {
+      g.sections.forEach(function (s) {
+        var h2 = document.getElementById(s.id); if (!h2) return;
+        var live = h2.nextElementSibling && h2.nextElementSibling.classList.contains("live-text") ? h2.nextElementSibling : null;
+        var text = map[s.id], n = h2.nextElementSibling;
+        while (n && n.tagName !== "H2" && !n.classList.contains("pager")) { if (!keepWithSection(n)) n.hidden = !!text; n = n.nextElementSibling; }
+        if (!text) { if (live) live.remove(); return; }
+        if (!live) { live = document.createElement("div"); live.className = "live-text"; h2.insertAdjacentElement("afterend", live); }
+        live.innerHTML = md(text);
+      });
+    });
+    buildIndex();
+  }
+  (async function () {
+    if (!window.claude || !window.claude.use) return;
+    var db = await window.claude.use("db");
+    if (!db) return;
+    db.collection("published").onSnapshot(function (snap) {
+      var map = {};
+      snap.docs.forEach(function (d) { var v = d.data() || {}; if (v.text) map[d.id] = v.text; });
+      applyLive(map);
+    }, function () {});
+  })();
+
   var box = document.getElementById("guide-search"), out = document.getElementById("search-results"), none = document.getElementById("search-none");
   function search() {
     var q = box.value.trim().toLowerCase();
@@ -169,7 +233,12 @@
 
   // ---------- Cinematic opening: a hand-projected drawing of the printer on a 2D canvas ----------
   var Intro = (function () {
-    var canvas = intro.querySelector("canvas"), ctx = canvas.getContext && canvas.getContext("2d");
+    var canvas = intro.querySelector("canvas"), gl3 = null, ctx = null;
+    try { if (window.PIRPrinter && window.PIRPrinter.supported()) gl3 = window.PIRPrinter.create(canvas, { hero: true }); } catch (e) { gl3 = null; }
+    if (!gl3) {
+      if (canvas.getContext && !canvas.getContext("2d")) { var fresh = canvas.cloneNode(false); canvas.parentNode.replaceChild(fresh, canvas); canvas = fresh; }
+      ctx = canvas.getContext && canvas.getContext("2d");
+    }
     var track = intro.querySelector(".intro-track"), copy = intro.querySelector(".intro-copy");
     var callout = document.getElementById("intro-callout"), stepEl = document.getElementById("intro-step");
     var hint = intro.querySelector(".intro-hint"), actions = intro.querySelector(".intro-actions");
@@ -204,17 +273,35 @@
     function layout() {
       var hh = headerHeight();
       var vh = window.innerHeight;
-      staticMode = reduce.matches || vh > 1500 || !ctx; // a very tall frame means the page is not the scroller
+      staticMode = reduce.matches || vh > 1500 || !(ctx || gl3); // a very tall frame means the page is not the scroller
       stageH = Math.max(420, Math.min(staticMode ? 640 : vh - hh, 920));
       intro.style.setProperty("--stage-h", stageH + "px");
       intro.style.setProperty("--track-h", (staticMode ? stageH : Math.round(stageH * 3.6)) + "px");
       intro.classList.toggle("is-static", staticMode);
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(canvas.clientWidth * dpr); canvas.height = Math.round(stageH * dpr);
+      if (gl3) gl3.resize(canvas.clientWidth, stageH);
+      else { canvas.width = Math.round(canvas.clientWidth * dpr); canvas.height = Math.round(stageH * dpr); }
       lastKey = "";
     }
 
+    function draw3(yaw, light, explode, hi) {
+      var cw = canvas.clientWidth, narrow = cw / stageH < 0.85;
+      gl3.camera.fov = narrow ? 40 : 28; gl3.camera.updateProjectionMatrix();
+      var lead = 1 - smooth(0.04, 0.26, (yaw + 0.62) / 4.6); // 1 while the title is up, 0 once it has gone
+      var back = (narrow ? 24 : 25) + lead * 5 + explode * (narrow ? 14 : 6.5);
+      gl3.camera.position.set(0, 6.2 + explode * 0.8, back);
+      gl3.camera.lookAt(0, 2.5 + lead * 3.1 + explode * 0.5, 0);
+      gl3.setYaw(yaw); gl3.setExplode(explode); gl3.setExposure(0.02 + light * 0.9); gl3.select(hi); gl3.render();
+      if (hi) {
+        var pt = gl3.project(hi, cw, stageH);
+        callout.hidden = false; callout.textContent = names[hi] || "";
+        var half = callout.offsetWidth / 2 + 8;
+        callout.style.transform = "translate(" + Math.round(Math.min(Math.max(pt.x, half), cw - half)) + "px," + Math.round(Math.max(pt.y - 18, 56)) + "px) translate(-50%,-100%)";
+      } else { callout.hidden = true; }
+    }
+
     function draw(yaw, light, explode, hi) {
+      if (gl3) { draw3(yaw, light, explode, hi); return; }
       var w = canvas.width, h = canvas.height, dpr = w / Math.max(1, canvas.clientWidth);
       ctx.clearRect(0, 0, w, h);
       var cx = w / 2, cy = h * 0.6, f = Math.min(w * 1.25, h * 1.5), dist = 25, pitch = 0.3;
@@ -277,7 +364,7 @@
 
     function frame(now) {
       running = false;
-      if (intro.hidden || guide.hidden || !ctx) return;
+      if (intro.hidden || guide.hidden || !(ctx || gl3)) return;
       if (!started) started = now;
       var p = 0;
       if (!staticMode) {

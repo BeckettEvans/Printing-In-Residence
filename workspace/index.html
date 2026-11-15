@@ -121,7 +121,7 @@ var SITE="https://beckettevans.github.io/Printing-In-Residence/";
 var REPO="https://github.com/BeckettEvans/Printing-In-Residence";
 var DOC="https://claude.ai/artifact/1VfzTeV71c6E5o8MFNZmPP";
 var PEOPLE=["Beckett","Jade","Bennett","Everyone"];
-var COLLS=["tasks","research","pages","visuals","milestones","questions","checklist","activity"];
+var COLLS=["tasks","research","pages","visuals","milestones","questions","checklist","activity","drafts"];
 var S={},loaded={},db=null,user=null,uid=null,canWrite=true,me="",notice="Connecting to the shared data…";
 COLLS.forEach(function(c){S[c]=[];});
 var view={owner:"",mode:"board"};
@@ -148,7 +148,7 @@ function fmt(iso){if(!iso)return "";var p=iso.split("-");var d=new Date(+p[0],+p
 function dueLabel(t){return t.dueText||fmt(t.due)||"No date";}
 function daysTo(iso){var p=iso.split("-"),q=todayISO().split("-");return Math.round((new Date(+p[0],+p[1]-1,+p[2])-new Date(+q[0],+q[1]-1,+q[2]))/864e5);}
 function isLate(t){return t.due&&t.status!=="Done"&&t.due<todayISO();}
-function chip(status){var s=status||"Not set";var c=(s==="Done"||s==="Answered"||s==="Approved"||s==="On the site")?"s-done":(s==="Blocked"||s==="Changes requested")?"s-block":(s==="Not started"||s==="Not set"||s==="Open")?"s-none":"s-prog";return '<span class="chip '+c+'">'+esc(s)+'</span>';}
+function chip(status){var s=status||"Not set";var c=(s==="Done"||s==="Answered"||s==="Approved"||s==="On the site"||s==="Published")?"s-done":(s==="Blocked"||s==="Changes requested")?"s-block":(s==="Not started"||s==="Not set"||s==="Open")?"s-none":"s-prog";return '<span class="chip '+c+'">'+esc(s)+'</span>';}
 function toast(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){t.style.display="none";},3500);}
 function mineOf(list){return list.filter(function(x){return x.owner===me||x.owner==="Everyone";});}
 function bySort(a,b){return (a.n||0)-(b.n||0)||String(a.id).localeCompare(String(b.id));}
@@ -197,28 +197,46 @@ function render(){
 function empty(c,word){return loaded[c]&&!S[c].length?'<p class="soft">No '+word+' recorded yet.</p>':"";}
 function taskRow(t){return '<li><span>'+editBtn("tasks",t,t.title)+'<br><span class="small soft">'+esc(t.owner||"No owner")+'</span></span><span class="small num" style="white-space:nowrap">'+(isLate(t)?'<span class="chip s-late">Overdue</span> ':"")+esc(dueLabel(t))+'</span></li>';}
 var V={};
+var GUIDE=window.__GUIDE||[];
+var openPg="";
+function words(s){s=(s||"").trim();return s?s.split(/\s+/).length:0;}
+function dft(key){return S.drafts.filter(function(d){return d.id===key;})[0]||null;}
+function secStatus(d){return d?(d.status||"Draft"):"Not started";}
+function guideOf(p){return GUIDE.filter(function(g){return g.title===p.title;})[0]||null;}
+function pageStats(p){var g=guideOf(p),o={pub:0,rev:0,appr:0,started:0,words:0,total:g?g.sections.length:0};if(!g)return o;
+  g.sections.forEach(function(s){var d=dft(s.id);if(!d)return;o.words+=words(d.text);if(words(d.text))o.started++;
+    if(["In review","Approved","Published"].indexOf(d.status)>=0)o.rev++;if(d.status==="Approved"||d.status==="Published")o.appr++;if(d.status==="Published")o.pub++;});return o;}
+function allStats(owner){var o={pub:0,rev:0,appr:0,started:0,words:0,total:0};S.pages.forEach(function(p){if(owner&&p.owner!==owner)return;var s=pageStats(p);for(var k in o)o[k]+=s[k];});return o;}
+function personCard(p){
+  var T=S.tasks.filter(function(t){return (t.owner===p||t.owner==="Everyone")&&t.status!=="Done";}).sort(byDue),next=T[0];
+  var own=S.tasks.filter(function(t){return t.owner===p;}),R=S.research.filter(function(r){return r.owner===p;}),Vs=S.visuals.filter(function(v){return v.owner===p;}),st=allStats(p);
+  var pages=S.pages.filter(function(x){return x.owner===p&&guideOf(x);}).sort(bySort);
+  return '<section class="panel"><div class="rowline"><h3 style="font-size:1.15rem">'+esc(p)+'</h3>'+(me===p?'<span class="chip s-done">You</span>':"")+'</div>'+
+    '<div><p class="small soft">Do next</p>'+(next?'<p>'+editBtn("tasks",next,next.title)+'</p><p class="meta">'+(isLate(next)?'<span class="chip s-late">Overdue</span>':"")+'<span class="num">Due '+esc(dueLabel(next))+'</span>'+chip(next.status)+'</p>':'<p class="soft">Nothing open.</p>')+'</div>'+
+    '<div><p class="small soft">Pages to write</p><ul class="plain">'+pages.map(function(x){var s=pageStats(x);return '<li><button class="link" data-page-open="'+esc(x.id)+'">'+esc(x.title)+'</button><span class="small num" style="white-space:nowrap">'+s.pub+' of '+s.total+' on site</span></li>';}).join("")+'</ul></div>'+
+    bar(own.filter(function(t){return t.status==="Done";}).length,own.length,"Own deliverables done")+
+    bar(st.rev,st.total,"Sections submitted")+
+    bar(R.filter(function(r){return r.status==="Done";}).length,R.length,"Research cards done")+
+    bar(Vs.filter(function(v){return v.status==="Done";}).length,Vs.length,"Visuals done")+'</section>';
+}
 V.overview=function(){
   var T=S.tasks,done=T.filter(function(t){return t.status==="Done";}).length;
   var late=T.filter(isLate).sort(byDue),soon=T.filter(function(t){return t.status!=="Done"&&t.due&&!isLate(t)&&daysTo(t.due)<=7;}).sort(byDue);
   var hard=S.milestones.filter(function(m){return m.due&&m.due>=todayISO()&&!m.submitted;}).sort(byDue)[0];
-  var R=S.research,V_=S.visuals,P=S.pages;
-  var h='<div class="grid">';
-  h+='<section class="panel"><h3>Status board</h3><p class="big num">'+done+' <span class="small soft">of '+T.length+' done</span></p>'+bar(done,T.length,"Deliverables done")+
-     '<p class="small soft">'+T.filter(function(t){return t.status==="In progress";}).length+' in progress, '+T.filter(function(t){return t.status==="Blocked";}).length+' blocked, '+late.length+' overdue. Counted from the board records.</p></section>';
+  var R=S.research,Vz=S.visuals,st=allStats("");
+  var h='<h2>Who is doing what</h2><div class="grid">'+["Beckett","Jade","Bennett"].map(personCard).join("")+'</div>';
+  h+='<h2>Deadlines</h2><div class="grid">';
   h+='<section class="panel"><h3>Next submission</h3>'+(hard?'<p class="big num">'+daysTo(hard.due)+' <span class="small soft">days</span></p><p><strong>'+esc(hard.milestone)+'</strong></p><p class="small soft">'+esc(hard.dueText||fmt(hard.due))+' · '+esc(hard.by||"")+'</p>':'<p class="soft">No upcoming milestone recorded.</p>')+'</section>';
-  h+='<section class="panel"><h3>Readiness by kind of work</h3>'+
-     bar(R.filter(function(x){return x.status==="Done";}).length,R.length,"Research cards done")+
-     bar(P.filter(function(x){return ["In review","Changes requested","Approved","On the site"].indexOf(x.status)>=0;}).length,P.length,"Pages drafted and in review or later")+
-     bar(V_.filter(function(x){return x.status==="Done";}).length,V_.length,"Visuals done")+
-     bar(P.filter(function(x){return x.status==="Approved"||x.status==="On the site";}).length,P.length,"Pages approved")+
-     bar(P.filter(function(x){return x.status==="On the site";}).length,P.length,"Pages on the site")+'</section>';
-  h+='</div><div class="grid">';
   h+='<section class="panel"><h3>Overdue</h3>'+(late.length?'<ul class="plain">'+late.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing is overdue.</p>')+'</section>';
   h+='<section class="panel"><h3>Due in the next 7 days</h3>'+(soon.length?'<ul class="plain">'+soon.map(taskRow).join("")+'</ul>':'<p class="soft">Nothing due this week.</p>')+'</section>';
-  h+='<section class="panel"><h3>By person</h3>'+["Beckett","Jade","Bennett","Everyone"].map(function(p){var mine=T.filter(function(t){return t.owner===p;});return bar(mine.filter(function(t){return t.status==="Done";}).length,mine.length,p);}).join("")+'</section>';
+  h+='</div><h2>Whole project</h2><div class="grid">';
+  h+='<section class="panel"><h3>Status board</h3><p class="big num">'+done+' <span class="small soft">of '+T.length+' done</span></p>'+bar(done,T.length,"Deliverables done")+
+     '<p class="small soft">'+T.filter(function(t){return t.status==="In progress";}).length+' in progress, '+T.filter(function(t){return t.status==="Blocked";}).length+' blocked, '+late.length+' overdue. Counted from the board records.</p></section>';
+  h+='<section class="panel"><h3>Guide text</h3>'+bar(st.started,st.total,"Sections with text entered")+bar(st.rev,st.total,"Submitted for review")+bar(st.appr,st.total,"Approved")+bar(st.pub,st.total,"Published to the site")+'<p class="small soft num">'+st.words+' words entered here so far.</p></section>';
+  h+='<section class="panel"><h3>Research and visuals</h3>'+bar(R.filter(function(x){return x.status==="Done";}).length,R.length,"Research cards done")+bar(Vz.filter(function(x){return x.status==="Done";}).length,Vz.length,"Visuals done")+bar(S.milestones.filter(function(m){return m.submitted;}).length,S.milestones.length,"Milestones submitted")+'</section>';
   h+='</div><div class="grid">';
-  h+='<section class="panel"><h3>Recent activity</h3>'+(S.activity.length?'<ul class="plain">'+S.activity.slice(0,12).map(function(a){return '<li><span><strong>'+esc(a.who)+'</strong> '+esc(a.text)+'</span><span class="small soft num" style="white-space:nowrap">'+esc(new Date(a.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span></li>';}).join("")+'</ul>':'<p class="soft">No changes logged yet. Every status change made here is listed.</p>')+'</section>';
-  h+='<section class="panel"><h3>Where things live</h3><ul class="plain"><li><a href="'+DOC+'">Project doc (Master Draft, Research Notebook)</a></li><li><a href="'+SITE+'">Live guide on GitHub Pages</a></li><li><a href="'+REPO+'">Website repository</a></li></ul><p class="small soft">Writing happens in the Master Draft, as the charter says. This workspace tracks who owns what and where it stands.</p></section>';
+  h+='<section class="panel"><h3>Recent activity</h3>'+(S.activity.length?'<ul class="plain">'+S.activity.slice(0,12).map(function(a){return '<li><span><strong>'+esc(a.who)+'</strong> '+esc(a.text)+'</span><span class="small soft num" style="white-space:nowrap">'+esc(new Date(a.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+'</span></li>';}).join("")+'</ul>':'<p class="soft">No changes logged yet. Every change made here is listed.</p>')+'</section>';
+  h+='<section class="panel"><h3>How text gets onto the site</h3><ol style="margin:0;padding-left:1.2rem"><li>Open your page under Pages and write or paste your own text into a section.</li><li>Submit it for review.</li><li>A teammate approves it or asks for changes.</li><li>Publish it. The guide in this artifact updates straight away.</li></ol><ul class="plain"><li><a href="'+DOC+'">Project doc</a></li><li><a href="'+SITE+'">GitHub Pages copy of the guide</a></li><li><a href="'+REPO+'">Website repository</a></li></ul></section>';
   return h+'</div>';
 };
 V.mine=function(){
@@ -260,9 +278,61 @@ V.research=function(){
 };
 V.pages=function(){
   var P=S.pages.slice().sort(bySort);
-  return '<h2>Pages</h2><p class="soft">One row per website page. Move a page along as it goes from outline to draft, relay review, approval and onto the site. Text is written in the Master Draft.</p>'+empty("pages","pages")+
-  '<div class="tablewrap"><table><thead><tr><th>Page</th><th>Owner</th><th>Target</th><th>Stage</th><th>Reviewer</th><th>Sections</th><th>Notes</th></tr></thead><tbody>'+P.map(function(p){return '<tr><td>'+editBtn("pages",p,p.title)+(p.file?'<br><a class="small" href="'+SITE+esc(p.file)+'">Open on the site</a>':"")+'</td><td>'+esc(p.owner)+'</td><td class="num">'+esc(p.words||"")+'</td><td>'+sel("pages/"+p.id+"/status",p.status||"Not started",OPT.pages,"Stage of "+p.title)+'</td><td>'+esc(p.reviewer||"")+'</td><td class="small">'+((p.sections||[]).length?'<details><summary>'+p.sections.length+' sections</summary><ol style="margin:.3rem 0;padding-left:1.2rem">'+p.sections.map(function(s){return '<li>'+esc(s)+'</li>';}).join("")+'</ol></details>':"")+'</td><td class="note small">'+esc(p.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+  var h='<h2>Pages</h2><p class="soft">Pick a page to write, review or publish its sections. Published text appears in the guide straight away.</p>'+empty("pages","pages")+
+  '<div class="tablewrap"><table><thead><tr><th>Page</th><th>Owner</th><th>Words entered</th><th>Sections on site</th><th>Stage</th><th>Reviewer</th><th>Notes</th></tr></thead><tbody>'+P.map(function(p){var s=pageStats(p),g=guideOf(p);return '<tr'+(openPg===p.id?' style="background:var(--accent-tint)"':"")+'><td>'+(g?'<button class="link" data-page-open="'+esc(p.id)+'">'+esc(p.title)+'</button>':esc(p.title))+'<br><button class="link small soft" data-edit="pages/'+esc(p.id)+'">Edit details</button></td><td>'+esc(p.owner)+'</td><td class="num">'+(g?s.words+' of ':"")+esc(p.words||"")+'</td><td class="num">'+(g?s.pub+' of '+s.total:"n/a")+'</td><td>'+sel("pages/"+p.id+"/status",p.status||"Not started",OPT.pages,"Stage of "+p.title)+'</td><td>'+esc(p.reviewer||"")+'</td><td class="note small">'+esc(p.notes||"")+'</td></tr>';}).join("")+'</tbody></table></div>';
+  var p=P.filter(function(x){return x.id===openPg;})[0],g=p&&guideOf(p);
+  if(g){
+    h+='<section class="panel" id="ws-sections"><div class="rowline"><h3 style="font-size:1.15rem">'+esc(p.title)+'</h3><a href="#'+esc(g.slug)+'">See this page in the guide</a></div><p class="small soft">Owner: '+esc(p.owner)+(p.reviewer?' · Reviewer: '+esc(p.reviewer):"")+'</p>'+
+      '<div class="tablewrap"><table><thead><tr><th>Section</th><th>Status</th><th>Words</th><th>Last change</th><th></th></tr></thead><tbody>'+g.sections.map(function(s){var d=dft(s.id);return '<tr><td>'+esc(s.heading)+'</td><td>'+chip(secStatus(d))+'</td><td class="num">'+(d?words(d.text):0)+'</td><td class="small soft">'+(d&&d.updatedAt?esc(d.by||"")+', '+esc(new Date(d.updatedAt).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})):"")+'</td><td><button data-sec="'+esc(s.id)+'">'+(d&&d.status==="In review"?"Review":canWrite?"Write":"Open")+'</button></td></tr>';}).join("")+'</tbody></table></div></section>';
+  }
+  return h;
 };
+var secOpen=null;
+function openSection(key){
+  var g=null,sec=null;GUIDE.forEach(function(x){x.sections.forEach(function(s){if(s.id===key){g=x;sec=s;}});});
+  if(!sec)return;
+  var page=S.pages.filter(function(p){return p.title===g.title;})[0]||{},d=dft(key)||{},st=secStatus(dft(key));
+  secOpen={key:key,g:g,sec:sec,page:page,d:d};
+  var ro=canWrite?"":" disabled",mineToApprove=me&&d.submittedBy&&d.submittedBy!==me;
+  var h='<form method="dialog" id="sec-form"><h2 id="dlg-title">'+esc(sec.heading)+'</h2><p class="small soft">'+esc(g.title)+' · Owner: '+esc(page.owner||"Not set")+' · '+chip(st)+'</p>';
+  if(d.reviewNote&&st==="Changes requested")h+='<p class="banner"><strong>Changes requested by '+esc(d.reviewedBy||"a reviewer")+':</strong> '+esc(d.reviewNote)+'</p>';
+  h+='<label class="f" for="sec-text">Text for this section, in your own words<textarea id="sec-text" style="min-height:14rem"'+ro+'>'+esc(d.text||"")+'</textarea></label>'+
+     '<p class="small soft">Leave a blank line between paragraphs. Start a line with "- " for a bullet, "1. " for a step, "### " for a small heading or "|" for a table row. Use **bold** and [link text](https://address).</p>'+
+     '<details><summary>Preview as it will look in the guide</summary><div id="sec-prev" style="border:1px solid var(--rule);border-radius:var(--r);padding:.6rem;margin-top:.4rem"></div></details>';
+  if(st==="In review"&&canWrite)h+='<label class="f" for="sec-note">Note for the writer (needed when asking for changes)<input type="text" id="sec-note"></label>';
+  if((d.history||[]).length)h+='<details><summary>Earlier published versions ('+d.history.length+')</summary><ul class="plain" style="margin-top:.4rem">'+d.history.map(function(v,i){return '<li><span class="small">'+esc(v.by||"")+', '+esc(new Date(v.t).toLocaleString("en-CA",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}))+' · '+words(v.text)+' words</span>'+(canWrite?'<button type="button" data-restore="'+i+'">Put back in the text box</button>':"")+'</li>';}).join("")+'</ul></details>';
+  h+='<div class="actions"><button type="button" id="sec-close">Close</button><span style="display:flex;gap:.5rem;flex-wrap:wrap">';
+  if(canWrite){
+    h+='<button type="button" data-act="draft">Save draft</button>';
+    if(st!=="In review")h+='<button type="button" class="primary" data-act="submit">Submit for review</button>';
+    if(st==="In review")h+='<button type="button" data-act="changes">Ask for changes</button><button type="button" class="primary" data-act="approve"'+(mineToApprove?"":' disabled title="A teammate approves, not the person who submitted"')+'>Approve</button>';
+    if(st==="Approved")h+='<button type="button" class="primary" data-act="publish">Publish to the site</button>';
+    if(st==="Published")h+='<button type="button" data-act="unpublish">Take off the site</button>';
+  }
+  h+='</span></div>'+(st==="In review"&&!mineToApprove&&canWrite?'<p class="small soft">A teammate has to approve this. Whoever submitted it cannot approve it.</p>':"")+'</form>';
+  var dl=$("dlg");dl.innerHTML=h;dl.showModal();
+  var ta=$("sec-text"),pv=$("sec-prev");
+  function prev(){pv.innerHTML=window.__md?window.__md(ta.value):"";}
+  ta.addEventListener("input",prev);prev();
+  $("sec-close").onclick=function(){dl.close();};
+  dl.querySelectorAll("[data-restore]").forEach(function(b){b.onclick=function(){ta.value=d.history[+b.dataset.restore].text;prev();toast("Earlier version is in the text box. Save or submit to keep it.");};});
+  dl.querySelectorAll("[data-act]").forEach(function(b){b.onclick=function(){sectionAct(b.dataset.act);};});
+}
+function sectionAct(act){
+  var o=secOpen,d=o.d,text=$("sec-text").value.replace(/\s+$/,""),now=Date.now(),name=o.g.title+": "+o.sec.heading;
+  if(!me){toast("Choose your name in the “I am” menu first.");return;}
+  if(!db){toast("Changes can't be saved here.");return;}
+  var doc={page:o.g.title,slug:o.g.slug,heading:o.sec.heading,owner:o.page.owner||"",text:text,status:d.status||"Draft",by:me,updatedAt:now,submittedBy:d.submittedBy||"",reviewedBy:d.reviewedBy||"",reviewNote:d.reviewNote||"",history:(d.history||[]).slice()};
+  var what="",pub=null;
+  if(act==="draft"){doc.status=(text===(d.text||"")&&d.status)?d.status:"Draft";what="saved a draft of “"+name+"”";}
+  if(act==="submit"){if(!text){toast("There is no text to submit yet.");return;}doc.status="In review";doc.submittedBy=me;doc.reviewNote="";what="submitted “"+name+"” for review";}
+  if(act==="approve"){doc.status="Approved";doc.reviewedBy=me;doc.reviewNote="";what="approved “"+name+"”";}
+  if(act==="changes"){var n=$("sec-note").value.trim();if(!n){toast("Say what needs to change in the note box.");return;}doc.status="Changes requested";doc.reviewedBy=me;doc.reviewNote=n;what="asked for changes to “"+name+"”";}
+  if(act==="publish"){doc.status="Published";doc.history=[{t:now,by:me,text:text}].concat(doc.history).slice(0,5);pub=db.doc("published/"+o.key).set({text:text,t:now,by:me,slug:o.g.slug});what="published “"+name+"” to the site";}
+  if(act==="unpublish"){doc.status="Approved";pub=db.doc("published/"+o.key).delete();what="took “"+name+"” off the site";}
+  Promise.resolve(pub).then(function(){return db.doc("drafts/"+o.key).set(doc);}).then(function(){log(what);toast(act==="publish"?"Published. The guide now shows this text.":"Saved.");$("dlg").close();},function(e){
+    if(e&&e.code==="invalid_argument"){canWrite=false;render();toast("You have view-only access, so this was not saved.");}else toast("That did not save. Check your connection and try again.");});
+}
 V.visuals=function(){
   var L=S.visuals.slice().sort(bySort);
   return '<div class="rowline"><h2>Visuals and credits</h2>'+(canWrite?'<button data-new="visuals">Add a visual</button>':"")+'</div><p class="soft">Every visual needs a caption, alt text and an ownership: Ours, Public domain, Creative Commons, Fair dealing or AI generated. AI images are decorative only and must be cited.</p>'+empty("visuals","visuals")+
@@ -324,7 +394,9 @@ function saveEditor(){
 /* ---------- events ---------- */
 $("main").addEventListener("click",function(ev){
   var b=ev.target.closest("[data-edit]");if(b){var p=b.dataset.edit.split("/");openEditor(p[0],p.slice(1).join("/"));return;}
-  var n=ev.target.closest("[data-new]");if(n)openEditor(n.dataset.new,null);
+  var n=ev.target.closest("[data-new]");if(n){openEditor(n.dataset.new,null);return;}
+  var sc=ev.target.closest("[data-sec]");if(sc){openSection(sc.dataset.sec);return;}
+  var po=ev.target.closest("[data-page-open]");if(po){openPg=po.dataset.pageOpen;if(route()!=="pages")location.hash="#team-pages";else render();setTimeout(function(){var el=$("ws-sections");if(el)el.scrollIntoView({block:"start"});},60);}
 });
 $("main").addEventListener("change",function(ev){
   var t=ev.target;
