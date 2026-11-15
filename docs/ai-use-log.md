@@ -46,3 +46,5 @@ Same session, later still. Prompt: "Create using remotion and other design skill
 - Claude replaced the printer model with `src/printer3d.src.js`, a hand-built reconstruction from the printer's published outer size and the nine parts already named on the explorer page. No Bambu Lab CAD file and no third-party model was used. Remotion was not used.
 - Claude added an empty FAQ heading to Start Here, because the Site Map says every page ends with one.
 - Claude added section writing, review and publishing to the workspace. It wrote none of the section text.
+
+Same session, later still. Prompt: "review the H2S models online and images and enhacne our model and fix glitches and overlaps". Claude reworked `src/printer3d.src.js` against Bambu Lab's "H2S introduction" wiki page and Bambu Lab's product photos of the H2 series chassis (seen as reference only; none of those photos are in this repository). Changes: silver side walls and front columns with a side window, black fascia with the touchscreen set into its left, door hinged on the left, three lead screws (rear centre and one each side), upper and lower belts, light strips on the crossbeams, gold build plate.

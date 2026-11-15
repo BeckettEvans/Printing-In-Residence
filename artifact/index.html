@@ -2653,9 +2653,9 @@ tbody tr:last-child > * {
       var cw = canvas.clientWidth, narrow = cw / stageH < 0.85;
       gl3.camera.fov = narrow ? 40 : 28; gl3.camera.updateProjectionMatrix();
       var lead = 1 - smooth(0.04, 0.26, (yaw + 0.62) / 4.6); // 1 while the title is up, 0 once it has gone
-      var back = (narrow ? 24 : 25) + lead * 5 + explode * (narrow ? 14 : 6.5);
+      var back = (narrow ? 24 : 25) + lead * 6 + explode * (narrow ? 15 : 8.5);
       gl3.camera.position.set(0, 6.2 + explode * 0.8, back);
-      gl3.camera.lookAt(0, 2.5 + lead * 3.1 + explode * 0.5, 0);
+      gl3.camera.lookAt(0, 2.6 + lead * 2.2 + explode * 0.7, 0);
       gl3.setYaw(yaw); gl3.setExplode(explode); gl3.setExposure(0.02 + light * 0.9); gl3.select(hi); gl3.render();
       if (hi) {
         var pt = gl3.project(hi, cw, stageH);
