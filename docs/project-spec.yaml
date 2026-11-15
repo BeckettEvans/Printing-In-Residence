@@ -1,0 +1,547 @@
+# Printing in Residence — machine-readable project specification
+# Built from the team's shared project doc ("CMNS 390 Project Doc (Shared)").
+# Nothing here is invented: every entry is taken from that doc as read on 2026-11-15.
+# Where the doc is silent or was not read, the entry says so.
+
+meta:
+  spec_version: 1
+  compiled_on: 2026-11-15
+  compiled_by: Claude (from screen reads of the shared doc; no text export was available)
+  authority_order:
+    - CMNS 390 Documentation assignment sheet and rubric (Blair, 2026a)   # not available to Claude directly
+    - CMNS 390 fall syllabus (Blair, 2026b)                               # not available to Claude directly
+    - Team charter, proposal and timeline (submitted 2026-11-10)
+    - Task Assignments, Site Map & Requirements, Master Draft tabs
+  sources_read_in_full:
+    - Proposal/Agreement/Timeline tab
+    - Task Assignments tab
+    - Task Assignments > Beckett
+    - Task Assignments > Everyone
+    - Task Assignments > Site Map & Requirements
+    - Master Draft tab
+    - Visuals & Credits tab
+  sources_read_in_part:
+    - Research Notebook (tracker rows J-11 onward, cards BE-1 to BE-5, J-1 to J-7 headers)
+  sources_not_read:
+    - Task Assignments > Jade
+    - Task Assignments > Bennett
+    - Research Notebook cards J-8 to J-14, B-1 to B-10, network test results
+    - AI Scans tab
+    - Submission Log tab
+    - The assignment sheet, rubric and syllabus themselves (only the team's summary of them was read)
+  repository:
+    url: https://github.com/BeckettEvans/Printing-In-Residence
+    state_on_2026-11-15: empty (no commits on main)
+
+project:
+  title: "Printing in Residence: Running a Bambu Lab H2S in UFV Student Housing"
+  short_title: Printing in Residence
+  course: CMNS 390, Assignments 3 and 4 (Major Project Documentation)
+  institution: University of the Fraser Valley (UFV)
+  term: Fall 2026
+  instructor: Kelsey Blair
+  deliverable: A website that is the documentation, plus a Brightspace title page linking to it
+  platform: GitHub Pages, plain HTML (decided in research card BE-3)
+  printer: Bambu Lab H2S (Beckett owns the test unit)
+  audience: >
+    UFV residents in H or J Building who own, or are about to buy, a Bambu Lab H2S.
+    Comfortable with a phone and laptop; no 3D printing or networking background.
+    They read the guide on their phones.
+  in_scope:
+    - Working out which building's rules and network apply
+    - Asking Housing for permission before the printer arrives
+    - Getting the printer online in H Building
+    - Getting the printer online in J Building
+    - Connection troubleshooting
+    - Room setup and getting ready for inspection
+  out_of_scope:
+    - Unboxing
+    - Slicing
+    - First print
+  out_of_scope_handling: Start Here links out to Bambu Lab's own wiki guides instead of repeating them
+  disclaimer: Not an official UFV or Bambu Lab document; Housing's written answer comes first
+
+team:
+  - name: Beckett Evans
+    initials: BE
+    github: BeckettEvans
+    role_summary: Start Here, compiled pages, website build, integration, submissions, instructor contact
+    writing_target_words: 1350
+    research_questions: 5
+    visuals_owed: 3
+  - name: Jade Newton
+    initials: JN
+    role_summary: Housing policy and room setup pages; sends the real inquiry to Housing
+    writing_target_words: 3000
+    research_questions: 14
+    visuals_owed: 4
+  - name: Bennett
+    last_name: unknown        # the title page still shows a placeholder
+    initials: BWO
+    role_summary: Network pages and troubleshooting; runs the hands-on network test
+    writing_target_words: 3000
+    research_questions: 10
+    visuals_owed: 7
+team_notes:
+  - The proposal header lists a fourth name (Guransh); the charter was updated for a team of three.
+  - Relay order for drafting and review is Beckett, Jade, Bennett, then Beckett for the final pass.
+  - Jade reviews Bennett's pages; Bennett reviews Jade's.
+
+ai_use_rules:
+  source: Research card BE-5, summarising the assignment sheet and syllabus
+  writing: Generative AI may not be used to write words for the team
+  allowed_with_citation:
+    - translating sources
+    - reading support
+    - outlining
+    - brainstorming
+    - researching
+  images: >
+    AI images are allowed for headers and page decoration only and must be cited.
+    Anything that teaches a step (screenshots, diagrams, photos of the printer) must be the team's own.
+  uncited_use: counts as academic misconduct
+  citation_format: >
+    [Generative AI tool]. (YYYY/MM/DD of prompt). "Text of prompt". Generated using [Name of Tool].
+    Website of tool, followed by a bracketed note on how the AI was used.
+  team_controls:
+    - Each person scans their own sections with GPTZero (10,000 characters per scan)
+    - Screenshots of scans go in the AI Scans tab before Nov 22 and again before Dec 4
+    - Each caption on an AI image says "AI generated image"
+  open_point: >
+    The doc does not say whether AI may be used to build the website's code and layout.
+    This needs the instructor's answer or an explicit disclosure before any AI-built site is submitted.
+
+design_standards:          # team charter, section 5
+  principle: The design is not supposed to catch the eye
+  typography: One typeface for body text at 11 or 12 pt; one consistent heading hierarchy; bold for emphasis; no underlining
+  spacing: Consistent margins, line spacing and alignment; effective white space
+  header_footer: Header carries the project title; footer carries the page number
+  structure: Consistent headings and subheadings; numbered steps; parallel lists
+  colour: One primary colour and one accent; readable in black and white
+  visuals: Support the message, never replace text; every visual has a caption; processes shown as a series of visuals
+  review: Contrast, repetition, alignment and proximity checked before the Dec 4 review
+writing_rules:             # Everyone tab
+  - Own words everywhere; close paraphrase or a direct quote gets an in-text citation
+  - Every source goes into the Research Notebook in APA 7 when it is used
+  - Paragraphs of three sentences at most
+  - Every page ends with a troubleshooting or FAQ block written by the page owner
+  - Every visual has a caption and alt text
+
+site_map:
+  - id: title-page
+    title: Title page
+    on_website: false       # Brightspace only
+    owner: Beckett
+    words: 50
+    sections: [Project title, Team names, Course, Date, Live link to the site]
+    status: Fields filled in; Bennett's last name and the live link are missing
+  - id: start-here
+    title: Start Here
+    landing_page: true
+    owner: Beckett
+    words: 700
+    sections:
+      - What this guide is and who it is for
+      - Not an official UFV document
+      - What we skip (links to Bambu Lab's own guides)
+      - Pick your building
+      - Before you start checklist
+      - The five steps at a glance
+      - Safety note
+    visuals: [1, 2]
+    status: Outline in the Master Draft; Beckett writes it up, due Nov 19
+  - id: ask-housing-first
+    title: Ask Housing First
+    owner: Jade
+    words: 1400
+    sections:
+      - Why you ask before the printer arrives
+      - What the handbook says
+      - What to send Housing
+      - Email template
+      - What happens next
+      - If Housing says no
+      - FAQ
+    visuals: [4]
+    status: Not started
+  - id: get-online-h
+    title: Get Online in H Building
+    owner: Bennett
+    words: 1200
+    sections:
+      - How internet works in H Building
+      - What the printer supports
+      - Connect the printer to Wi-Fi
+      - Bind it in Bambu Handy
+      - Print from a laptop with Bambu Studio
+      - LAN mode vs cloud printing
+      - FAQ
+    visuals: [8, 11, 12, 13]
+    status: Not started
+  - id: get-online-j
+    title: Get Online in J Building
+    owner: Bennett
+    words: 1400
+    sections:
+      - Why eduroam will not work
+      - Why a personal router is not an option
+      - Find the printer's MAC address
+      - Register it on the gaming network
+      - Connect and bind
+      - Can a laptop on eduroam reach the printer?
+      - FAQ
+    visuals: [8, 9, 10, 11, 12, 13, 14]
+    status: Not started
+  - id: connection-troubleshooting
+    title: Connection Troubleshooting
+    owner: Bennett
+    words: 400
+    sections: ["One table for both buildings: symptom, likely cause, fix"]
+    status: Not started
+  - id: room-setup-and-inspection
+    title: Room Setup and Inspection
+    owner: Jade
+    words: 1600
+    sections:
+      - Pick the spot
+      - Power and outlets
+      - Air, fumes and filament choice
+      - Noise and quiet hours
+      - Fire safety
+      - Filter maintenance schedule
+      - Filament storage and waste
+      - Getting ready for room inspection
+      - Moving out
+      - FAQ
+    visuals: [5, 6, 7]
+    status: Not started
+  - id: glossary
+    title: Glossary
+    owner: Beckett (compiles)
+    words: 400
+    sections: [Plain definitions; each owner sends 4 to 6 terms]
+    terms_listed_so_far: [Bambu Handy, Bambu Studio, Community Assistant (CA), eduroam, H Building, J Building, MAC address, UFV-Gamer]
+    status: Beckett's term list is in; Jade's and Bennett's terms still to come
+  - id: references
+    title: References
+    owner: Beckett (compiles)
+    words: null
+    sections: [APA 7 list of every source, Generative AI use in the syllabus format]
+    status: First list compiled Nov 15; grows as Jade's and Bennett's cards fill in
+  - id: about-and-credits
+    title: About and Credits
+    owner: Beckett
+    words: 200
+    sections: [Who made this, Images and credits table, AI use, Last updated, Not an official document]
+    status: Outline in the Master Draft; Beckett writes it up, due Nov 20
+site_wide:
+  footer_links: [Glossary, References, About and Credits]
+  reader_path_h: [start-here, ask-housing-first, get-online-h, connection-troubleshooting, room-setup-and-inspection]
+  reader_path_j: [start-here, ask-housing-first, get-online-j, connection-troubleshooting, room-setup-and-inspection]
+  planned_total: {words: 7350, visuals: 14, letter_pages_equivalent: 18, minimum_pages: 15}
+  page_equivalence_rule: About 400 words plus one captioned visual counts as one page
+
+visuals:
+  - {id: 1, title: Building chooser graphic (H or J), page: start-here, owner: Beckett, ownership: null, status: Not started}
+  - {id: 2, title: Five-step overview diagram, page: start-here, owner: Beckett, ownership: null, status: Not started}
+  - {id: 3, title: Decorative header images, page: site-wide, owner: Beckett, ownership: AI generated, status: Not started}
+  - {id: 4, title: Housing email template graphic, page: ask-housing-first, owner: Jade, ownership: null, status: Not started}
+  - {id: 5, title: "Desk placement diagram (desk, clearance, window, outlet)", page: room-setup-and-inspection, owner: Jade, ownership: null, status: Not started}
+  - {id: 6, title: Filter location photo or diagram, page: room-setup-and-inspection, owner: Jade, ownership: null, status: Not started}
+  - {id: 7, title: Room inspection checklist graphic, page: room-setup-and-inspection, owner: Jade, ownership: null, status: Not started}
+  - {id: 8, title: Printer touchscreen network menu, page: get-online-h and get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 9, title: MAC address screen, page: get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 10, title: Gaming network registration portal, page: get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 11, title: "Bambu Handy binding, step 1", page: get-online-h and get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 12, title: "Bambu Handy binding, step 2", page: get-online-h and get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 13, title: "Bambu Handy binding, step 3", page: get-online-h and get-online-j, owner: Bennett, ownership: null, status: Not started}
+  - {id: 14, title: "Diagram: eduroam vs gaming network vs Bambu cloud", page: get-online-j, owner: Bennett, ownership: null, status: Not started}
+visual_rules:
+  ownership_values: [Ours, Public domain, Creative Commons, Fair dealing, AI generated]
+  people_in_photos: Any photo with a person in it needs that person's permission first
+
+milestones:
+  - {date: 2026-11-10, time: "17:30", type: hard, what: Group Proposal submitted on Brightspace, who: Whole team, status: Done}
+  - {date: 2026-11-15, type: soft, what: "Tabs set up, charter updated for three, plan posted, email to instructor sent", who: Beckett, status: Done}
+  - {date: 2026-11-16, type: soft, what: Research cards BE-1 to BE-5, who: Beckett, status: Done}
+  - {date: 2026-11-16, type: soft, what: Inquiry email to Housing (J-3), who: Jade, status: Not started on the status board; the card shows a date sent of Nov 13}
+  - {date: 2026-11-17, time: "17:30", type: hard, what: Individual Progress Report on Brightspace, who: Each person, status: In progress (Beckett's is drafted)}
+  - {date: 2026-11-18, type: soft, what: "Website skeleton live: navigation, 9 pages as empty shells with headings, colour and type set", who: Beckett, status: Not started}
+  - {date: 2026-11-18, type: soft, what: Research notes J-1 to J-14 and B-1 to B-10 in the Research Notebook, who: Jade and Bennett, status: Not started}
+  - {date: 2026-11-18, type: soft, what: Network test in J Building, who: Bennett, status: Not started}
+  - {date: 2026-11-19, type: soft, what: Start Here drafted, who: Beckett, status: In progress}
+  - {date: 2026-11-20, type: soft, what: "Relay drafts finished; every section in the Master Draft", who: Everyone, status: Not started}
+  - {date: 2026-11-21, type: soft, what: Relay reviews and Beckett's final pass, who: Everyone, status: Not started}
+  - {date: 2026-11-22, type: soft, what: "Co-writing session, GPTZero scans, drafts put into the site", who: Whole team, status: Not started}
+  - {date: 2026-11-24, time: "17:30", type: hard, what: Group Draft Documentation on Brightspace, who: Beckett submits, status: Not started}
+  - {date: 2026-12-01, type: soft, what: Revisions from draft feedback put into the site, who: Everyone, status: Not started}
+  - {date: 2026-12-04, type: soft, what: "Final review, final scans, phone and colour check", who: Whole team, status: Not started}
+  - {date: 2026-12-06, type: soft, what: "Site locked, export checked by all three", who: Whole team, status: Not started}
+  - {date: "2026-12-07 or 2026-12-08", type: hard, what: "Presentation, 5 minutes, in person", who: Whole team, status: Date not confirmed}
+  - {date: 2026-12-08, time: "17:30", type: hard, what: Final Documentation and individual work documents on Brightspace, who: Beckett submits; each person submits their own work document, status: Not started}
+
+rubric_categories:
+  - {category: Content (each person's own pages), leads: [Beckett, Jade, Bennett]}
+  - {category: "Research, referencing, citation", leads: [Beckett], supports: [Jade, Bennett]}
+  - {category: "Structure, organization, cogency", leads: [Beckett], supports: [Jade, Bennett]}
+  - {category: Formatting and presentation, leads: [Beckett], supports: [Jade, Bennett]}
+  - {category: Design (visuals and captions), leads: [Beckett, Jade, Bennett]}
+  - {category: "Adapting to the digital (site, links)", leads: [Beckett], supports: [Jade, Bennett]}
+  - {category: "Style, expression, audience", leads: [Beckett, Jade, Bennett]}
+  - {category: Grammar and proofreading, leads: [Beckett, Jade, Bennett]}
+  - {category: "Process grade (attendance, on time, peer reviews)", leads: [Beckett, Jade, Bennett]}
+rubric_note: Category names come from the team's Site Map & Requirements tab; weights and descriptors were not in the doc.
+
+# Requirement -> how the team meets it -> where it shows on the site -> owner -> how to check it.
+traceability:
+  - id: R01
+    requirement: At least 5 letter-size pages per student (15 for the team)
+    how_met: About 7,350 words plus 14 visuals, roughly 18 pages
+    site_section: all pages
+    owner: Everyone; Beckett checks the total on Nov 20
+    validation: Word count per page against site_map targets; visual count equals 14
+  - id: R02
+    requirement: Concrete, specific topic Abbotsford students can do; not existing documentation
+    how_met: Covers only UFV approval, networks and room setup; links out for unboxing and first print
+    site_section: start-here
+    owner: Done (proposal)
+    validation: No page repeats Bambu Lab's unboxing, slicing or first-print guides
+  - id: R03
+    requirement: "Components: definitions"
+    how_met: Glossary page plus 4 to 6 terms from each owner
+    site_section: glossary
+    owner: Beckett compiles; Jade and Bennett send terms
+    validation: Every term used on a content page appears in the Glossary
+  - id: R04
+    requirement: "Components: descriptions"
+    how_met: Printer specs, handbook rules, how each network works
+    site_section: ask-housing-first, get-online-h, get-online-j, room-setup-and-inspection
+    owner: Jade and Bennett
+    validation: Each description carries an in-text citation
+  - id: R05
+    requirement: "Components: instructions"
+    how_met: Housing email steps; connect, register and bind steps for H and J
+    site_section: ask-housing-first, get-online-h, get-online-j
+    owner: Jade (housing), Bennett (networks)
+    validation: Steps are numbered and were run on the real H2S where the doc says so
+  - id: R06
+    requirement: "Components: images"
+    how_met: 14 planned visuals in Visuals & Credits
+    site_section: all content pages
+    owner: Each owner for their own
+    validation: Each visual has a credits row, caption and alt text
+  - id: R07
+    requirement: "Components: graphs and tables"
+    how_met: Five-step diagram, filter schedule, troubleshooting table, network diagram, inspection checklist
+    site_section: start-here, room-setup-and-inspection, connection-troubleshooting, get-online-j
+    owner: Beckett, Jade, Bennett
+    validation: Each one is present and captioned
+  - id: R08
+    requirement: "Components: troubleshooting"
+    how_met: FAQ on every page plus the Connection Troubleshooting page
+    site_section: all content pages; connection-troubleshooting
+    owner: Each owner; Bennett for the main page
+    validation: Every content page ends with an FAQ or troubleshooting block
+  - id: R09
+    requirement: Content complete, accurate, detailed
+    how_met: Research questions BE, J and B answered with sources; network test on a real printer
+    site_section: all content pages
+    owner: Each owner
+    validation: Research tracker shows every card Done; network test results logged
+  - id: R10
+    requirement: Reference list, consistent format, in-text citation for close paraphrase
+    how_met: APA 7 in the Research Notebook, compiled into References
+    site_section: references
+    owner: Everyone adds; Beckett compiles
+    validation: Every in-text citation has a References entry and every link opens
+  - id: R11
+    requirement: Own words everywhere
+    how_met: Paraphrase rule plus GPTZero scans
+    site_section: all pages
+    owner: Everyone
+    validation: Scan screenshots in the AI Scans tab for every section, twice
+  - id: R12
+    requirement: AI images cited
+    how_met: Decorative only; cited in References and About and Credits
+    site_section: references, about-and-credits
+    owner: Beckett
+    validation: Each AI image has tool, date and exact prompt logged, and "AI generated image" in its caption
+  - id: R13
+    requirement: Structure, organization, flow between parts
+    how_met: Relay reviews Nov 21; co-writing Nov 22; final pass
+    site_section: all pages
+    owner: Beckett leads; everyone
+    validation: Each page hands off to the next page in the reader path
+  - id: R14
+    requirement: "Formatting: headings, bullets, consistent design"
+    how_met: Charter design standards; site template
+    site_section: site template
+    owner: Beckett (template); everyone follows
+    validation: One heading hierarchy, one typeface, no underlining for emphasis, on every page
+  - id: R15
+    requirement: "Design: visuals placed on purpose, with captions"
+    how_met: Captions and alt text on every visual; placed where the step is
+    site_section: all content pages
+    owner: Each owner writes; Beckett places
+    validation: No visual without a caption and alt text
+  - id: R16
+    requirement: "Adapting to the digital: landing page, internal and external links, short paragraphs, spacing"
+    how_met: Start Here as landing page; navigation; links between pages; 3-sentence paragraphs
+    site_section: start-here, navigation
+    owner: Beckett (site); everyone (short paragraphs)
+    validation: Phone test on iPhone and Android; all internal and external links tested
+  - id: R17
+    requirement: "Style: plain language, suits the audience, distinct voice"
+    how_met: Written for residents with no 3D printing background; harmonized on Nov 22
+    site_section: all pages
+    owner: Everyone
+    validation: Co-writing session held; jargon is defined in the Glossary
+  - id: R18
+    requirement: Grammar and proofreading
+    how_met: Relay reviews and Dec 4 final review
+    site_section: all pages
+    owner: Everyone
+    validation: Final review completed on Dec 4
+  - id: R19
+    requirement: Group Draft (Nov 24)
+    how_met: Master Draft and site submitted
+    site_section: whole site
+    owner: Beckett submits
+    validation: Submission logged with a screenshot in the Submission Log
+  - id: R20
+    requirement: Presentation of Documentation
+    how_met: 5 minutes; each presents their own pages
+    site_section: n/a
+    owner: Everyone
+    validation: Rehearsed once together before class
+  - id: R21
+    requirement: Final Documentation submitted once, identical
+    how_met: Title page with live link, one submission
+    site_section: title-page
+    owner: Beckett
+    validation: The live link on the title page opens the locked site
+  - id: R22
+    requirement: '"Written comments" line if the team wants them'
+    how_met: Decide as a group before Dec 8
+    site_section: n/a
+    owner: Beckett
+    validation: Decision recorded
+  - id: R23
+    requirement: "Individual work document: note, contributions, peer review sheets"
+    how_met: Each person submits their own
+    site_section: n/a
+    owner: Everyone
+    validation: Three individual submissions on Dec 8
+  - id: R24
+    requirement: "Process grade: attendance, on time, clear communication, positive peer reviews"
+    how_met: Charter rules; status board kept current
+    site_section: n/a
+    owner: Everyone
+    validation: Status board matches the actual state of work
+
+beckett_assignment:
+  writing:
+    - {item: Title page, status: Fields filled in, left: Bennett's last name and the live site link}
+    - {item: Start Here (about 700 words), status: Outline in, left: Write it up}
+    - {item: About and Credits (about 200 words), status: Outline in, left: Write it up}
+    - {item: Glossary, status: Own term list in, left: Get terms from Jade and Bennett and write the definitions}
+    - {item: References, status: First APA 7 list in, left: Add Jade's and Bennett's sources; check every link opens}
+  visuals:
+    - {item: Building chooser graphic, status: Not started, constraint: "Teaches a step, so it must be Beckett's own work"}
+    - {item: Five-step overview diagram, status: Not started, constraint: "Teaches a step, so it must be Beckett's own work"}
+    - {item: Decorative header images, status: Not started, constraint: "AI allowed; save tool, date and exact prompt"}
+  website:
+    - {item: "Skeleton live: navigation, 9 pages as empty shells with headings, colour and type set", due: 2026-11-18, status: Not started}
+    - {item: Put drafts into the site, due: 2026-11-22, status: Not started}
+    - {item: "Captions and alt text on every visual; internal links; external links tested", status: Not started}
+    - {item: "Phone test on iPhone and Android, plus a black and white readability check", due: 2026-12-04, status: Not started}
+    - {item: Revisions from draft feedback put in, due: 2026-12-01, status: Not started}
+  research:
+    - {card: BE-1, topic: Official Bambu Lab guides, status: Done}
+    - {card: BE-2, topic: Building names and paths, status: Done}
+    - {card: BE-3, topic: Website platform, status: Done, result: GitHub Pages}
+    - {card: BE-4, topic: Questions for Kelsey, status: Email sent 2026-11-14; no answers recorded yet}
+    - {card: BE-5, topic: AI images and AI-use rules, status: Done}
+  coordination:
+    - Individual Progress Report (drafted; due 2026-11-17)
+    - GPTZero scans of own pages (before Nov 22 and before Dec 4)
+    - Group submissions on Brightspace, each logged in the Submission Log
+    - Final relay pass on Jade's and Bennett's pages (Nov 21)
+    - Presentation intro, live demo and close
+
+recorded_findings:           # as stated in the doc; not re-verified by Claude
+  - H Building is Lá:lem te Baker; J Building is Lá:léms Ye EverGreen
+  - H Building has hardwired Rogers internet with a Wi-Fi modem in each bedroom (handbook s. 2.19)
+  - J Building uses eduroam; devices that cannot use eduroam go on UFV-Gamer by MAC address (handbook s. 2.19)
+  - Personal Wi-Fi routers are on the prohibited list (handbook s. 1.10.1)
+  - The 2026-27 housing handbook does not mention 3D printers
+  - H Building is shut down for construction, so the network test runs in J only
+
+open_questions_and_risks:
+  - id: Q1
+    issue: The J Building test does not prove the H Building steps, because H uses hardwired Rogers internet rather than eduroam
+    owner: Beckett with Bennett
+    status: Open
+  - id: Q2
+    issue: Housing may not answer by Nov 19; fallback is to write Ask Housing First as "what to ask and what to send"
+    owner: Jade
+    status: Open
+  - id: Q3
+    issue: Presentation date (assignment sheet says Dec 7 at 5:30 pm; timeline says Dec 8 in class)
+    owner: Beckett (BE-4)
+    status: Asked; no answer recorded
+  - id: Q4
+    issue: Whether the Nov 24 group draft can be the site link or must be a PDF export
+    owner: Beckett (BE-4)
+    status: Asked; no answer recorded
+  - id: Q5
+    issue: Page minimum for a team of three (assumed 15)
+    owner: Beckett (BE-4)
+    status: Asked; no answer recorded
+  - id: Q6
+    issue: H2S power figure differs between sources (spec sheet 1,170 W; Bambu wiki FAQ 1,250 W at 110 V)
+    owner: Jade (J-7)
+    status: Open
+  - id: Q7
+    issue: The H2S spec source in the proposal is a reseller-hosted PDF; replace with Bambu Lab's official page
+    owner: Jade (J-7), Bennett (B-4)
+    status: Open
+  - id: Q8
+    issue: Exact network names ("UFV-Gamer", Rogers Wi-Fi name) still to be confirmed on site
+    owner: Bennett (B-1, B-2)
+    status: Partly answered by the handbook
+  - id: Q9
+    issue: The H Building closure comes from Beckett's knowledge as a CA; UFV's Baker page showed no closure notice on Nov 15
+    owner: Beckett
+    status: Open
+  - id: Q10
+    issue: Bennett's last name is missing from the title page and About and Credits
+    owner: Beckett
+    status: Open
+  - id: Q11
+    issue: Whether AI may build the website's code and layout is not covered by the recorded AI rules
+    owner: Beckett
+    status: Open; ask the instructor or disclose
+
+conflicts_with_master_build_prompt:
+  - area: Subject matter
+    build_prompt: A 3D printing learning guide (slicing, print settings, operating the printer, finishing prints)
+    project_records: Those topics are explicitly out of scope; the guide covers housing approval, networks and room setup
+  - area: Platform
+    build_prompt: Next.js, PostgreSQL, Supabase auth and realtime, full-stack hosting
+    project_records: GitHub Pages with plain HTML (card BE-3)
+  - area: Private workspace
+    build_prompt: A separate task manager and collaborative editor
+    project_records: The submitted charter makes the shared Claude doc the single source of truth for drafts, tasks and feedback
+  - area: Visual direction
+    build_prompt: Cinematic intro, WebGL exploded printer, scroll storytelling
+    project_records: Charter says the design should not catch the eye; one primary colour and one accent; readable in black and white; read on phones
+  - area: Instructional visuals
+    build_prompt: AI-built 3D model and explainer animations
+    project_records: Anything that teaches a step must be the team's own work; AI imagery is decorative only and cited
+  - area: Written sections
+    build_prompt: Claude writes Beckett's sections to a submission-ready standard
+    project_records: The syllabus does not allow generative AI to write words for the team
+  - area: Completion tracking
+    build_prompt: Claude marks tasks complete and submits content for review
+    project_records: Each person updates their own status and scans their own writing
