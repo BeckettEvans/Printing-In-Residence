@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Printer explorer | Printing in Residence</title>
+  <meta name="description" content="A simplified 3D illustration of the Bambu Lab H2S and its main parts.">
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="assets/js/site.js" defer></script>
+  <link rel="stylesheet" href="assets/css/explorer.css">
+  <script type="module" src="assets/js/explorer.bundle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-title" href="index.html">Printing in Residence</a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav" hidden>Menu</button>
+  </header>
+
+  <div class="layout">
+    <nav class="site-nav" id="site-nav" aria-label="Guide">
+      <p class="nav-heading" id="nav-steps-title">The five steps</p>
+      <ol class="nav-steps" aria-labelledby="nav-steps-title">
+        <li><a href="index.html">Start Here</a></li>
+        <li><a href="ask-housing-first.html">Ask Housing First</a></li>
+        <li>
+          <span class="nav-step-name">Get online in your building</span>
+          <ul class="nav-buildings">
+            <li><a href="get-online-h-building.html">H Building</a></li>
+            <li><a href="get-online-j-building.html">J Building</a></li>
+          </ul>
+        </li>
+        <li><a href="connection-troubleshooting.html">Connection Troubleshooting</a></li>
+        <li><a href="room-setup-and-inspection.html">Room Setup and Inspection</a></li>
+      </ol>
+      <p class="nav-heading" id="nav-ref-title">Reference</p>
+      <ul class="nav-reference" aria-labelledby="nav-ref-title">
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="references.html">References</a></li>
+        <li><a href="about-and-credits.html">About and Credits</a></li>
+        <li><a href="printer-explorer.html" aria-current="page">Printer explorer</a></li>
+      </ul>
+    </nav>
+
+    <main class="layout-main" id="main">
+      <div class="content">
+      <h1>Printer explorer</h1>
+      <p class="draft-note">Extra page. Not one of the nine guide pages; remove this file and its menu link to leave it out.</p>
+
+        <h2 id="look-around-the-printer">Look around the printer</h2>
+        <p>Drag to turn the printer, pinch or scroll to zoom, and pick a part to see what it does. This is a simplified illustration, not to scale, and part positions are approximate. For the real thing, use Bambu Lab's <a href="https://wiki.bambulab.com/en/h2s/manual/h2s-intro">H2S introduction</a> (Bambu Lab, n.d.-e).</p>
+        <figure class="figure explorer" id="explorer">
+          <div class="explorer-stage">
+            <canvas id="explorer-canvas" aria-label="Simplified 3D illustration of the Bambu Lab H2S. The parts list below gives the same information." role="img"></canvas>
+            <p class="explorer-label" id="explorer-label" hidden></p>
+            <p class="explorer-fallback" id="explorer-fallback" hidden>The 3D view is not available on this device. The parts list below has the same information.</p>
+          </div>
+          <div class="explorer-controls">
+            <button type="button" class="explorer-button" id="explode-toggle" aria-pressed="false">Pull the parts apart</button>
+            <button type="button" class="explorer-button" id="reset-view">Reset the view</button>
+          </div>
+          <figcaption>Simplified illustration of the Bambu Lab H2S, not to scale. AI generated image.</figcaption>
+        </figure>
+
+        <h2 id="parts">Parts</h2>
+        <p id="part-status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <ul class="part-list">
+            <li>
+              <button type="button" class="part-button" data-part="frame" aria-pressed="false">Frame and enclosure</button>
+              <p class="part-text" id="part-frame">The body of the printer. Everything else is mounted to it, and the door and cover close it in.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="top" aria-pressed="false">Top cover</button>
+              <p class="part-text" id="part-top">Closes the top of the enclosure. The printer detects when it is open.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="door" aria-pressed="false">Front door</button>
+              <p class="part-text" id="part-door">Closes the front of the enclosure. The printer detects when it is open.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="gantry" aria-pressed="false">CoreXY motion system</button>
+              <p class="part-text" id="part-gantry">Two motors and two belts move the tool head left, right, forward and back.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="toolhead" aria-pressed="false">Tool head</button>
+              <p class="part-text" id="part-toolhead">Carries the extruder, the hotend and its single nozzle, plus fans and sensors.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="bed" aria-pressed="false">Heatbed and build plate</button>
+              <p class="part-text" id="part-bed">The heated print surface. A textured build plate attaches to it with magnets and flexes to release prints.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="screws" aria-pressed="false">Z axis lead screws</button>
+              <p class="part-text" id="part-screws">Three lead screws raise and lower the heatbed evenly.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="screen" aria-pressed="false">Touchscreen</button>
+              <p class="part-text" id="part-screen">The 5-inch screen you use to control the printer. The Wi-Fi settings are found here.</p>
+            </li>
+            <li>
+              <button type="button" class="part-button" data-part="key" aria-pressed="false">Safety key</button>
+              <p class="part-text" id="part-key">Plugs into the back of the printer. It must be inserted for the printer to power on.</p>
+            </li>
+        </ul>
+
+
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <ul class="footer-links" aria-label="Reference pages">
+      <li><a href="glossary.html">Glossary</a></li>
+      <li><a href="references.html">References</a></li>
+      <li><a href="about-and-credits.html">About and Credits</a></li>
+    </ul>
+    <p>Not an official UFV or Bambu Lab document. Housing's written answer comes first.</p>
+
+    <p>Last updated: <!-- set on the final site lock -->draft</p>
+  </footer>
+</body>
+</html>
